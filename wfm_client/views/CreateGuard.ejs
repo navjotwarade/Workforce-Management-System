@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href = "http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+</head>
+
+<body ng-app="myApp" ng-controller="userCtrl">
+<div class="container">
+<%- include CommonHeader.ejs %> 
+<br><br><br>
+<hr>
+<h3>List of all Guards</h3>
+<hr>
+
+<button  class="btn btn-success" ng-click="listGuard();showme=true" >
+<span class="glyphicon glyphicon-user"></span>List Guards
+</button>
+
+<table class="table table-striped" ng-show="showme">
+  <thead>
+    <tr>
+      <th>Edit</th>
+      <th>Guard </th>
+      <th>Building</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="user in users" ng-if="!user.hide">
+      <td>
+        <button class="btn" ng-click="editUser(user.Guard_ID)">
+          <span class="glyphicon glyphicon-pencil"></span>Edit
+        </button>
+      </td>
+      
+      <td>{{ user.Firstname }}</td>
+      <td>{{ user.Lastname }}</td>
+      <td>{{user.Guard_ID}}</td>
+      <td><a ng-click="user.hide = true; deleteUser(user.Guard_ID)" class="btn btn-small btn-danger">Delete</a></td>
+       <td><button class="btn" ng-click="InfoUser(user.Guard_ID)">
+          <span class="glyphicon glyphicon-chevron-down"></span>More Info
+       </button></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+<button class="btn btn-success" ng-click="createGuard()">
+<span class="glyphicon glyphicon-user"></span>Create New Guard
+</button>
+<span style="padding-left:500px"></span>
+<input type="search" ng-model="searchName"></input>
+<button class="btn btn-success" ng-click="searchUser()">
+<span class="glyphicon glyphicon-search"></span>Search a Guard
+</button>
+<hr>
+
+<h3 ng-show="edit">Create New Guard:</h3>
+<h3 ng-hide="edit">Edit Guard:</h3>
+
+<form class="form-horizontal">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">First Name:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="fName" ng-disabled="!edit" placeholder="First Name">
+    </div>
+  </div> 
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Last Name:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="lName" ng-disabled="!edit" placeholder="Last Name">
+    </div>
+  </div>
+  
+  
+   <div class="form-group">
+    <label class="col-sm-2 control-label">Address:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="addr" ng-disabled="!edit" placeholder="address">
+    </div>
+  </div> 
+  
+   <div class="form-group">
+    <label class="col-sm-2 control-label">City:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="city" ng-disabled="!edit" placeholder="City">
+    </div>
+  </div> 
+  
+   <div class="form-group">
+    <label class="col-sm-2 control-label">State:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="state" ng-disabled="!edit" placeholder="State">
+    </div>
+  </div> 
+  
+   <div class="form-group">
+    <label class="col-sm-2 control-label">Zip code:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="zip" ng-disabled="!edit" placeholder="zip code">
+    </div>
+  </div> 
+  
+   <div class="form-group">
+    <label class="col-sm-2 control-label">Phone Number:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="pNumber" ng-disabled="!edit" placeholder="Phone number">
+    </div>
+  </div> 
+  
+   <div class="form-group">
+    <label class="col-sm-2 control-label">Email:</label>
+    <div class="col-sm-10">
+    <input type="email" ng-model="email" ng-disabled="!edit" placeholder="email">
+    </div>
+  </div> 
+  
+    <div class="form-group">
+    <label class="col-sm-2 control-label">Client ID:</label>
+    <div class="col-sm-10">
+    <select id="selectclientd" style="width:160px" ng-model="clientid">
+    
+    </select>
+    </div>
+    
+    
+  </div> 
+  
+  <h3 ng-show="edit">Advanced Details:</h3>
+  
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Guard Id:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="guardId" ng-disabled="!edit" placeholder="Guard ID">
+    </div>
+  </div> 
+  
+
+   <div class="form-group">
+   <label class="col-sm-2 control-label">Building/s to patrol:  </label>
+    <div class="col-sm-10">
+    <select id="selectbuildingid" style="width:160px" ng-model="buildingId">
+  
+    </select>
+    </div>
+    <br>
+    <br>
+  
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Start Date:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="startdate" ng-disabled="!edit" placeholder="starting date">
+    </div>
+  </div> 
+  
+  <div class="form-group">
+    <label class="col-sm-2 control-label">End Date:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="enddate" ng-disabled="!edit" placeholder="Ending date">
+    </div>
+  </div> 
+  
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Working days:</label>
+    <div class="col-sm-10">
+    <input id="chkbox1" type="checkbox" ng-model="monday" ng-disabled="!edit" ><label> Monday</label>
+    {{monday}}
+    <input id="chkbox2" type="checkbox" ng-model="tuesday" ng-disabled="!edit" ><label> Tuesday</label>
+    <input id="chkbox3" type="checkbox" ng-model="wednesday" ng-disabled="!edit" ><label> Wednesday</label>
+    <input id="chkbox4" type="checkbox" ng-model="thursday" ng-disabled="!edit" ><label> Thursday</label>
+    <input id="chkbox5" type="checkbox" ng-model="friday" ng-disabled="!edit" ><label> Friday</label>
+    <input id="chkbox6" type="checkbox" ng-model="saturday" ng-disabled="!edit" ><label> Saturday</label>
+    <input id="chkbox7" type="checkbox" ng-model="sunday" ng-disabled="!edit" ><label> Sunday</label>
+     </div>
+  </div> 
+  
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Total Hours:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="totalHours" ng-disabled="!edit" placeholder="total hours of work">
+    </div>
+  </div> 
+  
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Password:</label>
+    <div class="col-sm-10">
+    <input type="password" ng-model="password" ng-disabled="!edit" placeholder="password">
+    </div>
+  </div> 
+  
+</form>
+
+<hr>
+<button class="btn btn-success" ng-click="saveChanges()">
+<span class="glyphicon glyphicon-save"></span>Save Changes
+</button>
+
+</div>
+
+<script>
+angular.module('myApp', []).controller('userCtrl', function($scope,$http,$location) {
+$scope.fName = '';
+$scope.lName = '';
+$scope.passw1 = '';
+$scope.passw2 = '';
+
+
+$scope.monday=false;
+$scope.tuesday=false;
+$scope.wednesday=false;
+$scope.thursday=false;
+$scope.friday=false;
+$scope.saturday=false;
+$scope.sunday=false;
+$scope.edit = true;
+$scope.error = false;
+$scope.incomplete = false; 
+$scope.buildingclient;
+alert($scope.monday);
+$http({
+							method : 'POST',
+							url : '/PopulateBuildingClient',
+							cache : false
+						}).success(
+										function(response) {
+										debugger
+										var optionbuild="";
+										if(response[0].length>=1)
+										{
+										for(i=0;i<response[0].length;i++){
+										optionbuild=optionbuild+"<option>"+response[0][i].Client_SSN+"</option>";
+										}
+										
+										
+										 $("#selectclientd").html(optionbuild);
+										}
+										debugger
+										if(response[1].length>=1)
+										{
+										
+										$scope.buildingclient=response[1];
+										}	
+										}).error(function(error) {
+									alert("error")
+								});
+
+$("#selectclientd").change(function () {
+debugger
+var optionbuild="";
+var clientnumber=$('#selectclientd option:selected').text();
+debugger
+alert(clientnumber);
+     for(i=0;i<$scope.buildingclient.length;i++){
+     if(clientnumber==$scope.buildingclient[i].Client_SSN){
+     optionbuild=optionbuild+"<option>"+$scope.buildingclient[i].Building_ID+"</option>";
+     }
+     }
+     $("#selectbuildingid").html(optionbuild);
+    });
+    
+$scope.editUser = function(id) {
+var num=id;
+$scope.num1=num;
+alert($scope.num1);
+    $http({
+	            method: 'POST',
+	            url: '/CreateGuard',
+                data: {"first":$scope.num1}	           
+	     }).success(function(response){
+	     debugger
+	           alert(JSON.stringify(response));
+	           $scope.edit = true;
+               $scope.fName=response[0].Firstname;
+	           $scope.lName=response[0].Lastname;
+	           $scope.addr=response[0].Address;
+	           $scope.city=response[0].City;
+	           $scope.state=response[0].State;
+	           $scope.zip=response[0].Zipcode;
+	           $scope.pNumber=response[0].Phone_number;
+	           $scope.email=response[0].EmailID;
+	           $scope.buildingId=response[0].Building_ID;
+	           $scope.guardId=response[0].Guard_ID;
+	           $scope.startdate=response[0].DateofJoining;
+	          $scope.enddate=response[0].LastDay;
+	          $scope.totalHours=response[0].No_of_Hours_perday;
+	        }).error(function(error){
+	            alert("error");
+	        });
+     
+	       
+	 
+  
+};
+$scope.saveChanges=function(){
+
+alert("hat");
+ 
+    $http({
+	            method: 'POST',
+	            url: '/update',
+	           data:{"firstname":$scope.fName,"lastname": $scope.lName,"address":$scope.addr,"city": $scope.city,"state":$scope.state,"zip":$scope.zip,"phone":$scope.pNumber,"email":$scope.email,"guardid":$scope.guardId,"sdate": $scope.startdate,"ldate":$scope.enddate,"totalhours":$scope.totalHours,"buildingid":$scope.buildingId,"mon":$scope.monday,"tue":$scope.tuesday,"wed":$scope.wednesday,"thu":$scope.thursday,"fri":$scope.friday,"sat":$scope.saturday,"sun":$scope.sunday}
+	     }).success(function(response){
+	           alert(JSON.stringify(response));
+	          
+	        }).error(function(error){
+	            alert("error");
+	        });
+}
+
+$scope.deleteUser=function(id){
+    
+         var num=id;
+        $scope.num1=num;
+        alert("preparing to delete"+$scope.num1);
+             $http({
+	            method: 'POST',
+	            url: '/abc',
+	            data:{"first":$scope.num1}
+	           
+	     }).success(function(response){
+	           alert(JSON.stringify(response));
+	           if(response!=null)
+	             {
+	               
+	             
+	             }
+	           
+	        }).error(function(error){
+	            alert("error");
+	        });
+
+}
+
+$scope.listGuard=function(){
+   
+   alert("hi");
+   $http({
+	            method: 'POST',
+	            url: '/listGuard'
+	           
+	     }).success(function(response){
+	           alert(JSON.stringify(response));
+	           if(response!=null)
+	             {
+	                $scope.users=response;
+	             
+	             }
+	           
+	        }).error(function(error){
+	            alert("error");
+	        });
+};
+
+
+$scope.createGuard = function() {
+ alert("hat"+$scope.monday+$scope.tueday);
+ debugger
+alert($('#chkbox2').prop('checked'));
+    $http({
+	            method: 'POST',
+	            url: '/create',
+	           data:{"firstname":$scope.fName,"lastname": $scope.lName,"address":$scope.addr,"city": $scope.city,"state":$scope.state,"zip":$scope.zip,"phone":$scope.pNumber,"email":$scope.email,"guardid":$scope.guardId,"sdate": $scope.startdate,"ldate":$scope.enddate,"totalhours":$scope.totalHours,"buildingid":$('#selectbuildingid option:selected').text(),"mon": $('#chkbox1').prop('checked'),"tue": $('#chkbox2').prop('checked'),"wed": $('#chkbox3').prop('checked'),"thu": $('#chkbox4').prop('checked'),"fri": $('#chkbox5').prop('checked'),"sat": $('#chkbox6').prop('checked'),"sun": $('#chkbox7').prop('checked'),"password":$scope.password,"ClientID":$('#selectclientd option:selected').text()}
+	     }).success(function(response){
+	           alert(JSON.stringify(response));
+	          
+	        }).error(function(error){
+	            alert("error");
+	        });
+};
+
+$scope.searchUser=function(){
+    alert("in search"+$scope.searchName);
+       
+       $http({
+	            method: 'POST',
+	            url: '/search',
+	           data:{"firstName": $scope.searchName }
+	     }).success(function(response){
+	           alert(JSON.stringify(response));
+	           $scope.fName=response[0].Firstname;
+	           $scope.lName=response[0].Lastname;
+	           $scope.addr=response[0].Address;
+	           $scope.city=response[0].City;
+	           $scope.state=response[0].State;
+	           $scope.zip=response[0].Zipcode;
+	           $scope.pNumber=response[0].Phone_number;
+	           $scope.email=response[0].EmailID;
+	           $scope.buildingId=response[0].Building_ID;
+	           $scope.guardId=response[0].Guard_ID;
+	           $scope.startdate=response[0].DateofJoining;
+	          $scope.enddate=response[0].LastDay;
+	          $scope.totalHours=response[0].No_of_Hours_perday;
+	          $scope.monday=response[0].Monday.data[0];
+	          
+	          
+	        }).error(function(error){
+	            alert("error");
+	        });
+
+};
+
+
+$scope.InfoUser=function(id){
+var num=id;
+$scope.num1=num;
+alert($scope.num1);
+    $http({
+	            method: 'POST',
+	            url: '/CreateGuard',
+                data: {"first":$scope.num1}	           
+	     }).success(function(response){
+	     debugger
+	           alert(JSON.stringify(response));
+	           $scope.edit = true;
+               $scope.fName=response[0].Firstname;
+	           $scope.lName=response[0].Lastname;
+	           $scope.addr=response[0].Address;
+	           $scope.city=response[0].City;
+	           $scope.state=response[0].State;
+	           $scope.zip=response[0].Zipcode;
+	           $scope.pNumber=response[0].Phone_number;
+	           $scope.email=response[0].EmailID;
+	           $scope.buildingId=response[0].Building_ID;
+	           $scope.guardId=response[0].Guard_ID;
+	           $scope.startdate=response[0].DateofJoining;
+	          $scope.enddate=response[0].LastDay;
+	          $scope.totalHours=response[0].No_of_Hours_perday;
+	          
+	           
+	        }).error(function(error){
+	            alert("error");
+	        });
+     
+
+};
+
+
+$scope.$watch('passw1',function() {$scope.test();});
+$scope.$watch('passw2',function() {$scope.test();});
+$scope.$watch('fName', function() {$scope.test();});
+$scope.$watch('lName', function() {$scope.test();});
+
+$scope.test = function() {
+  if ($scope.passw1 !== $scope.passw2) {
+    $scope.error = true;
+    } else {
+    $scope.error = false;
+  }
+  $scope.incomplete = false;
+  if ($scope.edit && (!$scope.fName.length ||
+  !$scope.lName.length ||
+  !$scope.passw1.length || !$scope.passw2.length)) {
+       $scope.incomplete = true;
+  }
+};
+
+});
+</script>
+
+</body>
+</html>

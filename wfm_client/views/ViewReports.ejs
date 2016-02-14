@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html ng-app="ReportWFMG">
+<meta charset="utf-8" />
+<head>
+<title>Reports</title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script data-require="angular.js@1.3.9" data-semver="1.3.9"
+	src="https://code.angularjs.org/1.3.9/angular.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head>
+<body style="margin-top: -50px; background-position: center;">
+	<%- include CommonHeader.ejs %> <%- include ClientCommonMenu.ejs %>
+	<div id="Body" ng-controller="ReportController"
+		style="float: left; width: 1200px; height: 600px; float: left;">
+		<div align="center"
+			style="width: 100%; border-style: solid; background-color: white; border-color: black; border-width: thin; padding-top: 20px; padding-bottom: 20px;">
+			<button id="CreateReport" ng-click="createreport()">Create
+				PDF Report</button>
+			<button id="downloadReport" disabled="disabled"
+				ng-click="downloadreport()">Download PDF Report</button>
+		</div>
+		<table id="tblHeading"
+			style="width: 100%; border-style: solid; background-color: white; border-color: black; border-width: thin;">
+			<tr>
+				<td
+					style="border-style: solid; border-color: black; border-width: thin;"><h4
+						id="Propertyname"></h4></td>
+				<td
+					style="border-style: solid; border-color: black; border-width: thin;"><h4
+						id="dateraised"></h4></td>
+				<td
+					style="border-style: solid; border-color: black; border-width: thin;"><h4
+						id="SecOffNameBadge"></h4></td>
+			</tr>
+		</table>
+		<div id="tbldetails"
+			style="width: 100%; border-style: solid; border-color: black; border-width: thin; background-color: white;">
+			<h6 style="width: 100%">ACTIVITY CHECKLIST</h6>
+			<h6 style="width: 100%">(IF ANY OF THE FOLLOWING ITEMS HAS A
+				TALLY, PLEASE REFER TO THE SUMMARY BELOW FOR DETAILS)</h6>
+		</div>
+		<div id="divpatroldetails" align="center"
+			style="width: 100%; border-style: solid; border-color: black; border-width: thin; background-color: white; float: left;">
+		</div>
+		<div id="divIR"
+			style="width: 100%; border-style: solid; border-color: black; border-width: thin; background-color: gray; float: left; color: white;">
+			<h5>Incident Reports</h5>
+		</div>
+		<div id="divIRValue"
+			style="width: 100%; border-style: solid; border-color: black; border-width: thin; background-color: white; float: left; color: black;">
+			<h6>No Incident Reported</h6>
+		</div>
+		<div id="divPV"
+			style="width: 100%; border-style: solid; border-color: black; border-width: thin; background-color: gray; float: left; color: white;">
+			<h5>Parking Violations</h5>
+		</div>
+		<div id="divPVValue"
+			style="width: 100%; border-style: solid; border-color: black; border-width: thin; background-color: white; float: left; color: black;">
+			<h6>No Parking Violations Reported</h6>
+		</div>
+		<div id="divMC"
+			style="width: 100%; border-style: solid; border-color: black; border-width: thin; background-color: gray; float: left; color: white;">
+			<h5>Maintenance Calls</h5>
+		</div>
+		<div id="divMCValue"
+			style="width: 100%; border-style: solid; border-color: black; border-width: thin; background-color: white; float: left; color: black;">
+			<h6>No maintenance calls</h6>
+		</div>
+		<div id="divCSC"
+			style="width: 100%; border-style: solid; border-color: black; border-width: thin; background-color: gray; float: left; color: white;">
+			<h5>Calls for Service Calls</h5>
+		</div>
+		<div id="divCSCValue"
+			style="width: 100%; border-style: solid; border-color: black; border-width: thin; background-color: white; float: left; color: black;">
+			<h6>No service calls</h6>
+		</div>
+		<div id="divPatrols"
+			style="width: 100%; border-style: solid; border-color: black; border-width: thin; background-color: gray; float: left; color: white;">
+			<h5>Patrols</h5>
+		</div>
+		<div id="divPatrolsValue"
+			style="width: 100%; border-style: solid; border-color: black; border-width: thin; background-color: white; float: left;">
+		</div>
+	</div>
+</body>
+<script>
+	var app = angular.module("ReportWFMG", []);
+</script>
+<script>
+	app
+			.controller(
+					"ClientMenuController",
+					function($sce, $scope, $http) {
+						debugger
+						$('#Welcome').text("Welcome Client");
+						
+						$http({
+							method : 'POST',
+							url : '/viewreportbyguard',
+							cache : false
+
+						})
+								.success(
+										function(response) {
+											debugger
+											$('#Propertyname')
+													.text(
+															"Building ID:"
+																	+ response.data[5][0].Building_ID);
+											$('#dateraised')
+													.text(
+															"DATE "
+																	+ response.data[5][0].ReportDate);
+											$('#SecOffNameBadge')
+													.text(
+															"SECURITY OFFICER NAME & BADGE # "
+																	+ response.data[5][0].GuardNameandBadge);
+											if (response.data[14][0].TotalPatrols >= 1) {
+												var Patroltable = '<table	style="border-style: solid; border-color: black; border-width: thin;"><tr><td colspan="2" style="border-style: solid; border-color: black; border-width: thin;">PATROL</td></tr>';
+
+												for (i = 0; i < response.data[14][0].TotalPatrols; i++) {
+													Patroltable = Patroltable
+															+ '<tr><td style="border-style: solid; border-color: black; border-width: thin;">'
+															+ (i+1);
+													Patroltable = Patroltable
+															+ '.</td><td style="border-style: solid; border-color: black; border-width: thin;">';
+													Patroltable = Patroltable
+															+ response.data[15][i].Patroltime
+															+ '</td></tr>';
+
+												}
+												Patroltable = Patroltable
+														+ '</table>';
+												document
+														.getElementById("divpatroldetails").innerHTML = $sce
+														.trustAsHtml(Patroltable);
+											}
+											if (response.data[12][0].TotalIR >= 1) {
+												var IR = '<table style="width: 100%; color: black;">';
+												IR = IR
+														+ '<tr><td><h5>Alert ID</h5></td>';
+												IR = IR
+														+ '<td><h5>Alert Raised</h5></td>';
+												IR = IR
+														+ '<td><h5>Raised time:</h5></td></tr>';
+
+												for (i = 0; i < response.data[12][0].TotalIR; i++) {
+													IR = IR + '<tr><td>' + i
+															+ 1 + '</td>';
+													IR = IR
+															+ '<td>'
+															+ response.data[13][i].Alert
+															+ '</td>';
+													IR = IR
+															+ '<td>'
+															+ response.data[13][i].AlertRaiseTime
+															+ '</td></tr>';
+												}
+												IR = IR + '</table>';
+												document
+														.getElementById("divIRValue").innerHTML = $sce
+														.trustAsHtml(IR);
+											}
+											if (response.data[6][0].TotalPV >= 1) {
+												var PV = '<table style="width: 100%; color: black;">';
+												PV = PV
+														+ '<tr><td><h5>Sl no</h5></td>';
+												PV = PV
+														+ '<td><h5>Description</h5></td>';
+												PV = PV
+														+ '<td><h5>Raised time:</h5></td></tr>';
+
+												for (i = 0; i < response.data[6][0].TotalPV; i++) {
+													PV = PV + '<tr><td>'
+															+ (i + 1) + '</td>';
+													PV = PV
+															+ '<td>'
+															+ response.data[7][i].Description
+															+ '</td>';
+													PV = PV
+															+ '<td>'
+															+ response.data[7][i].DateSubmitted
+															+ '</td></tr>';
+												}
+												PV = PV + '</table>';
+												document
+														.getElementById("divPVValue").innerHTML = $sce
+														.trustAsHtml(PV);
+											}
+											if (response.data[8][0].TotalMC >= 1) {
+												var MC = '<table style="width: 100%; color: black;">';
+												MC = MC
+														+ '<tr><td><h5>Sl no</h5></td>';
+												MC = MC
+														+ '<td><h5>Description</h5></td>';
+												MC = MC
+														+ '<td><h5>Raised time:</h5></td></tr>';
+
+												for (i = 0; i < response.data[8][0].TotalMC; i++) {
+													MC = MC + '<tr><td>'
+															+ (i + 1) + '</td>';
+													MC = MC
+															+ '<td>'
+															+ response.data[9][i].Description
+															+ '</td>';
+													MC = MC
+															+ '<td>'
+															+ response.data[9][i].DateSubmitted
+															+ '</td></tr>';
+												}
+												MC = MC + '</table>';
+												document
+														.getElementById("divMCValue").innerHTML = $sce
+														.trustAsHtml(MC);
+											}
+											if (response.data[10][0].TotalCS >= 1) {
+												var CS = '<table style="width: 100%; color: black;">';
+												CS = CS
+														+ '<tr><td><h5>Sl no</h5></td>';
+												CS = CS
+														+ '<td><h5>Description</h5></td>';
+												CS = CS
+														+ '<td><h5>Raised time:</h5></td></tr>';
+
+												for (i = 0; i < response.data[10][0].TotalCS; i++) {
+													CS = CS + '<tr><td>'
+															+ (i + 1) + '</td>';
+													CS = CS
+															+ '<td>'
+															+ response.data[11][i].Description
+															+ '</td>';
+													CS = CS
+															+ '<td>'
+															+ response.data[11][i].DateSubmitted
+															+ '</td></tr>';
+												}
+												CS = CS + '</table>';
+												document
+														.getElementById("divCSCValue").innerHTML = $sce
+														.trustAsHtml(CS);
+											}
+											if (response.data[14][0].TotalPatrols >= 1) {
+												var Patrolsv = '<table style="width: 100%; border-style: solid; border-color: black; border-width: thin;">';
+												Patrolsv = Patrolsv
+														+ "<tr><td>";
+												for (i = 0; i < response.data[14][0].TotalPatrols; i++) {
+
+													Patrolsv = Patrolsv
+															+ '<table style="width: 100%;border-bottom-style: solid; border-bottom-color: black; border-bottom-width: thin;"><tr ><td style="text-decoration: underline;">'
+															+ response.data[15][i].Patroltime
+															+ '- Patrol</td></tr>';
+													Patrolsv = Patrolsv
+															+ '<tr style="background-color: silver;"><td>Disposition:</td></tr>';
+													Patrolsv = Patrolsv
+															+ '<tr><td>'
+															+ response.data[15][i].PatrolReportDescription
+															+ '</td></tr></table>';
+
+												}
+												Patrolsv = Patrolsv
+														+ '</td></tr></table>';
+												document
+														.getElementById("divPatrolsValue").innerHTML = $sce
+														.trustAsHtml(Patrolsv);
+											}
+
+										}).error(function(error) {
+
+								});
+
+					});
+
+	app.controller("ReportController", function($sce, $scope, $http) {
+		$scope.createreport = function() {
+			debugger
+			var htmlcode = document.documentElement.outerHTML;
+			$http({
+				method : 'POST',
+				url : '/CreatePDF',
+				cache : false,
+				data : {
+					"sourcecode" : htmlcode
+				}
+
+			}).success(function(response) {
+			}).error(function(error) {
+			});
+			document.getElementById("CreateReport").disabled = true;
+			document.getElementById("downloadReport").disabled = false;
+		}
+
+		$scope.downloadreport = function() {
+			debugger
+			document.getElementById("downloadReport").disabled = true;
+			window.location = '/download';
+
+		}
+	});
+</script>
+</html>

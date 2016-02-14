@@ -1,0 +1,225 @@
+.site-footer
+{
+	background-color: #222;
+	color: #fff;
+}
+.bottom-footer
+{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding-top: 10px
+}
+.footer-nav
+{
+	list-style: none;
+}
+.footer-nav li
+{
+	display: inline;
+	padding: 0px 10px;
+}
+.footer-nav a
+{
+	color: #fff;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.dropdown-menu
+{
+  background-color: black;
+}
+
+.dropdown-menu li > a
+{
+  color: Gray;
+}
+
+.dropdown-menu li > a:hover
+{
+  color: White;
+  background-color: #2E2E2E;
+}
+.footer-nav a:hover
+{
+	text-decoration: none;
+}
+
+.button{
+  background-color: #81BEF7;
+  width: 40px;
+  height: 30px;
+}
+.adv
+{
+  color: white;
+}
+
+.adv a:hover
+{
+  color: Red;
+  text-decoration: none;
+}
+.form-control
+{
+  display: inline;
+}
+
+
+.header-nav a:hover
+{
+	color: #4169E1;
+}
+
+.textbox
+{
+  width: 300px;
+  height: 30px;
+}
+.display
+{
+	display: inline;
+}
+.container{
+    position:relative;
+}
+.col-lg-3.col-md-13.col-sm-12.col-xs-12{
+    position:absolute;
+    top:200px;
+    left:300px;
+    width: 450px;
+    background-color: White;
+}
+
+.col-lg-3.col-md-12.col-sm-12.col-xs-12{
+    position:absolute;
+    top:50px;
+    left:200px;
+    width:750px;
+    background-color: White;
+}
+
+.btn
+{
+  margin-top:25px;
+  margin-bottom:30px;
+}
+
+.button_signin
+{
+  margin-left:50px;
+  margin-top:10px;
+  margin-bottom:20px;
+  width: 350px;
+}
+.styled-select select {
+   border: none;
+   font-size: 14px;
+   height: 29px; /* If you add too much padding here, the options won't show in IE */
+   width: 268px;
+   margin-top: 10px;
+   background-color: white;
+}
+
+.fullpage {
+    background: url('../images/building.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+.signupFull {
+    background: #E6E6E6 no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+.text{
+  margin-left:30px;
+  margin-top:10px;
+  margin-bottom:10px;
+  width: 350px;
+  height: 35px;
+
+}
+
+./*profile_dropdown
+{
+height:75px;
+weight:75px;
+position:static;
+text-decoration: none;
+
+}
+.item
+{
+display: none;
+text-decoration: none;
+background: #222222 85% 55% no-repeat;
+font-family: 'Century Gothic';
+font-size: large;
+font-weight: bold;
+color: #9FC54E;
+white-space: nowrap;
+}*/
+
+.row-bg
+{
+	background-color: #f97777;
+}
+
+ /* navbar */
+.navbar-default {
+    border-color: #E7E7E7;
+}
+/* title */
+.navbar-default .navbar-brand {
+    color: #777;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: #5E5E5E;
+}
+/* link */
+.navbar-default .navbar-nav > li > a {
+    color: white;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #1E90FF;
+}
+.navbar-default .navbar-nav > .active > a, 
+.navbar-default .navbar-nav > .active > a:hover, 
+.navbar-default .navbar-nav > .active > a:focus {
+    color: white;
+    background-color: #E7E7E7;
+}
+.navbar-default .navbar-nav > .open > a, 
+.navbar-default .navbar-nav > .open > a:hover, 
+.navbar-default .navbar-nav > .open > a:focus {
+    color: #1E90FF;
+    text-decoration: none;
+}
+/* caret */
+.navbar-default .navbar-nav > .dropdown > a .caret {
+    border-top-color: #777;
+    border-bottom-color: #777;
+}
+
+ body{margin:50px;}
+      #accordion .glyphicon { margin-right:10px; }
+      .panel-collapse>.list-group .list-group-item:first-child {border-top-right-radius: 0;border-top-left-radius: 0;}
+      .panel-collapse>.list-group .list-group-item {border-width: 1px 0;}
+      .panel-collapse>.list-group {margin-bottom: 0;}
+      .panel-collapse .list-group-item {border-radius:0;}
+
+      .panel-collapse .list-group .list-group {margin: 0;margin-top: 10px;}
+      .panel-collapse .list-group-item li.list-group-item {margin: 0 -15px;border-top: 1px solid #ddd !important;border-bottom: 0;padding-left: 30px;}
+      .panel-collapse .list-group-item li.list-group-item:last-child {padding-bottom: 0;}
+
+      .panel-collapse div.list-group div.list-group{margin: 0;}
+      .panel-collapse div.list-group .list-group a.list-group-item {border-top: 1px solid #ddd !important;border-bottom: 0;padding-left: 30px;}
+      .panel-collapse .list-group-item li.list-group-item {border-top: 1px solid #DDD !important;}

@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html ng-app="WFMGS">
+<head>
+<title><%= title %></title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+</head>
+<body style="margin-top: -50px; margin-left: 25px;">
+	<div ng-controller="WFMGSController">
+		<h1><%= title %></h1>
+		<p>Welcome to <%= title %></p>
+		<input type="radio" name="user" value="0">Admin <br> <input
+			type="radio" name="user" value="1">Client <br> <input
+			type="radio" name="user" value="2">Guard <br>
+		<button ng-click="signin()">Sign In</button>
+		
+	</div>
+
+</body>
+<script>
+	var app = angular.module("WFMGS", []);
+</script>
+<script>
+	app.controller("WFMGSController", function($sce, $scope, $http) {
+		debugger
+
+		$scope.signin = function() {
+			if ($("input[name=user]:checked").val() == 0) {
+				window.location = '/Admin';
+			}
+			else if ($("input[name=user]:checked").val() == 1) {
+				window.location = '/Client';
+			}
+			else if ($("input[name=user]:checked").val() == 2) {
+				window.location = '/Guard';
+			}
+
+		}
+		
+
+	});
+</script>
+<script>
+	
+</script>
+</html>

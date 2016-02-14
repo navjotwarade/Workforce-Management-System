@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+
+<style>
+.top-buffer { margin-top:20px; }
+</style>
+</head>
+
+<body>
+
+
+<input id=x type="hidden" value="<%=x%>">
+<input id=y type="hidden" value="<%=y%>">
+<input id=address type="hidden" value="<%=address%>">
+
+
+<div id="divlink" ng-controller="ClientMenuController"
+	style="width: 1200px; height: 20px; float: left; background-color: olive;">
+<table class="table table-striped" style="font-family: fantasy;"><tr>
+		<td>
+	<a style="padding-left: 10px; color: White;"
+		class="glyphicon glyphicon-home" href="#">Home</a>
+		</td>
+		<td> 
+	<a	style="padding-left: 10px; color: White;"
+		class="glyphicon glyphicon-warning-sign" href="#">View-Alerts</a>
+		</td>
+		<td> 
+	<a	style="padding-left: 10px; color: White;"  ng-click="ViewBuildingReports()"
+		class="glyphicon glyphicon-file" href="#">View-Building-Reports</a>
+		</td>
+		<td> 
+	<a	style="padding-left: 10px; color: White;"
+		class="glyphicon glyphicon-file" href="#">View-Consolidated-Report</a>
+		</td>
+		<td>
+	<a style="padding-left: 10px; color: White;"
+		class="glyphicon glyphicon-file" href="#">Search-Report</a>
+		</td>
+		<td>
+	<a style="padding-left: 10px; color: White;"
+		class="glyphicon glyphicon-file" href="#">Building</a>
+		</td>
+</tr></table>
+</div>
+
+<br><br>
+
+<script>
+var x= document.getElementById("x").value;
+var y= document.getElementById("y").value;
+point1=x.split(",");
+point2=y.split(",");
+
+
+console.log("X: "+ x +" Y: "+y);
+	console.log("X: "+ point1[0] +" Y: "+point2[0]);
+	console.log("X: "+ point1[1] +" Y: "+point2[1]);
+	
+//console.log("asdfasdf");
+	function initialize() {
+		
+		for(var i=0;i<point1.length;i++)
+			{
+				var mapProp = {
+					//center : new google.maps.LatLng(51.508742, -0.120850),
+					center : new google.maps.LatLng(point1[i], point2[i]),
+					zoom : 18,
+					mapTypeId : google.maps.MapTypeId.ROADMAP
+				};
+				
+				var map = new google.maps.Map(document.getElementById("googleMap"+i),
+						mapProp);
+				
+				myCenter = new google.maps.LatLng(point1[i], point2[i]);
+				
+				var marker = new google.maps.Marker({
+					position : myCenter,
+					animation : google.maps.Animation.BOUNCE,
+					title: address[i]
+				});
+
+				marker.setMap(map);
+			}
+		
+
+	}
+
+	google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+
+	<form class="form-horizontal" action="" id="buildForm">
+		<div class="form-group">
+
+	<div class="col-md-6 col-md-offset-3">
+		<div align="center" class="row top-buffer">
+			<h3 style="font-style: italic;" align="left">Building Requests:</h3>
+			<table border="0" width="70%" class="table table-hover">
+				<%if(client!=null){ console.log("asdfasdfasdfasdf "+Boolean(String(noResult)));%>
+				<thead>
+					<tr>
+					<th style="font-style: normal; font-family: sans-serif; font-size: x-large;" align="center"> CLIENT
+					</th>
+					<th style="font-style: normal; font-family: sans-serif; font-size: x-large;" align="center"> BUILDING MAP
+					</th>
+					<th style="font-style: normal; font-family: sans-serif; font-size: x-large;" align="center"> ACCEPT/REJECT
+					</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% for(var i=0;client!=null && i<client.length;i++){%>
+					<tr>
+						<td style="font-family: monospace; font-size: x-large; vertical-align: middle;" width="30%"><b>
+								Client ID: <a href="#">
+								<%=client[i]%></a><br>
+								Building Id: <a href="#">
+								<%=building[i]%></a><br>
+								Address: <a href="#">
+								<%=address[i]%></a>
+						</b></td>
+						<td style="padding:0 15px 0 15px;">
+							<div id="googleMap<%=i%>" style="width: 400px; height: 300px;"></div>
+						</td>
+						<td style="vertical-align: middle;"> <a href="#"
+							class="btn btn-success glyphicon glyphicon-plus-sign"
+							onclick="acceptBuilding('<%=client[i]%>','<%=building[i]%>');">
+								ACCEPT BUILDING</a><br><br>
+							<a href="#"
+							class="btn btn-danger glyphicon glyphicon-minus-sign"
+							onclick="rejectBuilding('<%=client[i]%>','<%=building[i]%>');">
+								REJECT BUILDING</a>
+						</td>
+					</tr>
+					<tr><td></td></tr>
+					<%}%> 
+					<%}else{%>
+					<tr><td><%=noResult%></td></tr>
+					<%}%>
+				</tbody>
+			</table>
+			<br> <br>
+		</div>
+		<br> <br>
+		
+		<h4 style="font-style: Normal; font-size: 30" align="left" >Select Client to View/Modify the building details:</h4> 
+		<select id="clientOption" class="form-control input-lg">
+		  <option value=null >None Selected</option>
+		<% for(var i=0; cList !=null && i<cList.length;i++){%>
+		<%if(i>0 && (client[i]==client[i-1])) continue;%>
+		  <option value=<%=cList[i]%> ><%=cList[i]%></option>
+		<%}%>
+		</select>
+		
+		<button class="btn btn-primary glyphicon glyphicon-edit" type="submit"
+	    onclick="buildingDetails()"> Show/EditClient
+	    </button>
+		
+		
+		
+		
+		<br><br><br><br><br><br><br><br><br><br>
+		
+	</div>
+</div></form>
+
+<script type="text/javascript">
+
+form = document.getElementById("buildForm");
+
+function acceptBuilding(client, building) {
+	form.action = "/acceptBuilding?client=" + client + "&building=" + building;
+	form.method = "post";
+	form.submit();
+	return false;
+}
+
+function rejectBuilding(client, building) {
+	form.action = "/rejectBuilding?client=" + client + "&building=" + building;
+	form.method = "post";
+	form.submit();
+	return false;
+}
+
+function buildingDetails() {
+	var selection = document.getElementById("clientOption");
+	var client = selection.options[selection.selectedIndex].value;
+	if(selection.selectedIndex!=0){
+	console.log("Selected Client: "+client);
+	form.action = "/buildingDetails?client=" + client;
+	form.method = "post";
+	form.submit();
+	}
+	else
+		alert("No Client is Selected!!!");
+}
+
+
+</script>
+
+</body>
+</html>

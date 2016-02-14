@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html ng-app="AdminWFMG">
+<meta charset="utf-8" />
+<head>
+<title>index</title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script data-require="angular.js@1.3.9" data-semver="1.3.9"
+	src="https://code.angularjs.org/1.3.9/angular.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+</head>
+<body
+	style="margin-top: -50px; background-position: center; background-image: url("");">
+	<%- include CommonHeader.ejs %> <%- include AdminCommonMenu.ejs %>
+
+	<br>
+	<br>
+	<br>
+	<br>
+	<div ng-controller="AdminClientViewController">
+		<div class="modal-body">
+			<div class="first-column">
+			Search: <input ng-model="query">
+				<form>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Guard Id</th>
+								<th>Name</th>
+								<th>ClientID</th>
+								<th>BuildingID</th>
+							</tr>
+						</thead>
+						<tr ng-repeat="d in result | filter:query">
+							<td><a href=""
+								ng-click="showdetails(d.SSN,d.Client_ID,d.Building_ID)">{{
+									d.SSN}}</td>
+							<td>{{d.Firstname}}</td>
+							<td>{{d.Client_ID}}</td>
+							<td>{{d.Building_ID}}</td>
+							<br>
+							<td><input type="submit" value="Delete"
+								class="btn btn-primary" ng-click="delete(d.SSN)"></td>
+					</table>
+			</div>
+			<div class="second-column">
+				<div class="col-sm-6">
+					<h3>
+						<strong>Guard Id :</strong> <input type="text"
+							class="form-control" ng-model="id" ng-readonly="id"></input><br>
+					</h3>
+					<div class="input-group">
+						<h3>
+							<strong>Guard Patrolling Details</strong>
+						</h3>
+						<td><strong>Client Id</strong><br> <select
+							id="selectclientid" style="width: 160px">
+						</select><br></td>
+						<td><strong>Building Id</strong></td> <br>
+						<td><select id="selectbuildingid" style="width: 160px">
+
+						</select></td> <br>
+
+
+
+						<tr>
+							<td><strong>Number of working hours</strong><br> <input
+								type="text" class="form-control" ng-model="start"></input><br></td>
+
+						</tr>
+						<strong>Date of Joining </strong><br> <input type="text"
+							class="form-control" ng-model="doj" placeholder="Click here to pick date" id="dojdatepicker"></input> <strong>Last
+							Day</strong><br> <input type="text" class="form-control"
+							ng-model="lastday" placeholder="Click here to pick date" id="lastdaydatepicker"></input> <strong>Back ground Status</strong><br>
+						<input id="chkbox1" type="checkbox" checked="checked"><label>
+							Monday</label> <input id="chkbox2" type="checkbox" checked="checked"><label>
+							Tuesday</label> <input id="chkbox3" type="checkbox" checked="checked"><label>
+							Wednesday</label> <input id="chkbox4" type="checkbox" checked="checked"><label>
+							Thursday</label> <input id="chkbox5" type="checkbox" checked="checked"><label>
+							Friday</label> <input id="chkbox6" type="checkbox" checked="checked"><label>
+							Saturday</label> <input id="chkbox7" type="checkbox" checked="checked"><label>
+							Sunday</label> <br> <br> <input type="submit" value="Edit"
+							class="btn btn-primary" ng-click="EditGuard()"> <br>
+						<br>
+
+						<h3>
+							<strong>Personal Details</strong>
+						</h3>
+						<strong>First Name:</strong><br> <input type="text"
+							class="form-control" ng-model="firstname"></input> <br> <strong>Last
+							Name:</strong> <input type="text" class="form-control" ng-model="lastname"></input><br>
+						<br> <strong>Address</strong><br> <input type="text"
+							class="form-control" ng-model="addr"></input><br> <br>
+						<strong>City</strong><br> <input type="text"
+							class="form-control" ng-model="city"></input><br> <br>
+						<strong>State</strong><br> <input type="text"
+							class="form-control" ng-model="state"></input><br> <br>
+						<strong>Zip Code</strong><br> <input type="text"
+							class="form-control" ng-model="zip"></input><br> <br> <strong>Phone
+							Number</strong><br> <input type="text" class="form-control"
+							ng-model="phone"></input><br> <br> <strong>Email
+							ID</strong><br> <input type="text" class="form-control"
+							ng-model="mail" ></input><br> <br>
+
+						<td><input type="submit" value="Edit" class="btn btn-primary"
+							ng-click="EditGuardPersonal()"></td>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script>
+	var app = angular.module('AdminWFMG', []);
+	app.controller('AdminMenuController', function($scope, $http, $window,
+			$filter) {
+
+		alert("hello");
+	});
+
+	app
+			.controller(
+					'AdminClientViewController',
+					function($scope, $http, $window, $filter) {
+					
+				$('#Welcome').text("Welcome Admin");
+		$("#dojdatepicker").datepicker({ dateFormat: "yy-mm-dd" }).val();
+		$("#lastdaydatepicker").datepicker({ dateFormat: "yy-mm-dd" }).val();		
+				$scope.buildingclient;	
+					
+					$http({
+							method : 'POST',
+							url : '/PopulateBuildingClient',
+							cache : false
+						}).success(
+										function(response) {
+										debugger
+										var optionbuild="<option>"+0+"</option>";
+										if(response[0].length>=1)
+										{
+										for(i=0;i<response[0].length;i++){
+										optionbuild=optionbuild+"<option>"+response[0][i].Client_SSN+"</option>";
+										}
+										
+										
+										 $("#selectclientid").html(optionbuild);
+										}
+										$("#selectclientid").val(0);
+													
+										
+										debugger
+										if(response[1].length>1)
+										{
+										
+										$scope.buildingclient=response[1];
+										}	
+										
+										
+										var build="<option>"+0+"</option>";
+										for(i=0;i<$scope.buildingclient.length;i++){
+    
+											build="<option>"+$scope.buildingclient[0].Building_ID+"</option>";
+     									}
+										$("#selectbuildingid").html(build);
+     								$("#selectbuildingid").val(0);
+     								
+										
+										}).error(function(error) {
+									alert("error")
+								});
+		
+		
+		function populatebuildingdropdown(){
+
+var optionbuild="";
+var clientnumber=$('#selectclientid option:selected').text();
+
+alert(clientnumber);
+     for(i=0;i<$scope.buildingclient.length;i++){
+     if(clientnumber==$scope.buildingclient[i].Client_SSN){
+     optionbuild=optionbuild+"<option>"+$scope.buildingclient[i].Building_ID+"</option>";
+     }
+     }
+     $("#selectbuildingid").html(optionbuild);
+
+}			
+			$("#selectclientid").change(function () {
+
+populatebuildingdropdown();
+    });		
+
+
+					
+					
+						$http({
+							method : 'GET',
+							url : '/Guardlist',
+							cache : false
+
+						}).success(function(response) {
+							alert("success");
+							debugger
+							console.log(JSON.stringify(response));
+							for (var i = 0; i < response.length; i++) {
+								console.log(response[i]);
+
+							}
+
+							$scope.result = response;
+
+						});
+
+						$scope.showdetails = function(ssn,clientid,buildingid) {
+							alert(ssn);
+							var num = ssn;
+
+							$http({
+								method : 'POST',
+								url : '/GuardDetails',
+								data : {
+									"num" : [ num ]
+								},
+								cache : false
+
+							})
+									.success(
+											function(response) {
+												debugger
+												alert("success")
+												$scope.data = JSON
+														.stringify(response);
+														for (var i = 0; i < response[0].length; i++) {
+													if (num == response[0][i].SSN) {
+													$scope.id = response[0][i].SSN;
+													$scope.start = response[0][i].No_of_Hours_perday;
+													}
+													$scope.doj = response[0][i].GuardDateofJoining;
+													$scope.lastday = response[0][i].GuardLastDay;
+													$scope.firstname = response[0][i].Firstname;
+													$scope.lastname = response[0][i].Lastname;
+													$scope.addr = response[0][i].Address;
+													$scope.city = response[0][i].City;
+													$scope.state = response[0][i].State;
+													$scope.zip = response[0][i].Zipcode;
+													$scope.phone = response[0][i].Phone_number;
+													$scope.mail = response[0][i].EmailID;
+													debugger
+													if(response[0][i].Monday==null||response[0][i].Monday==0)
+													{
+													$('#chkbox1').prop('checked', false);
+													}
+													else{
+													$('#chkbox1').prop('checked', true);
+													}
+													if(response[0][i].Tuesday==null||response[0][i].Tuesday==0)
+													{
+													$('#chkbox2').prop('checked', false);
+													}
+													else{
+													$('#chkbox2').prop('checked', true);
+													}
+													if(response[0][i].Wednesday==null||response[0][i].Wednesday==0)
+													{
+													$('#chkbox3').prop('checked', false);;
+													}
+													else{
+													$('#chkbox3').prop('checked', true);
+													}
+													if(response[0][i].Thursday==null||response[0][i].Thursday==0)
+													{
+													$('#chkbox4').prop('checked', false);
+													}
+													else{
+													$('#chkbox4').prop('checked', true);
+													}
+													if(response[0][i].Friday==null||response[0][i].Friday==0)
+													{
+													$('#chkbox5').prop('checked', false);
+													}
+													else{
+													$('#chkbox5').prop('checked', true);
+													}
+													if(response[0][i].Saturday==null||response[0][i].Saturday==0)
+													{
+													$('#chkbox6').prop('checked', false);
+													}
+													else{
+													$('#chkbox6').prop('checked', true);
+													}
+													if(response[0][i].Sunday==null||response[0][i].Sunday==0)
+													{
+													$('#chkbox7').prop('checked', false);
+													}
+													else{
+													$('#chkbox7').prop('checked', true);
+													}
+													$("#selectclientid").val(clientid);
+													populatebuildingdropdown();
+													
+													
+													}
+												
+											});
+
+						}
+						 $scope.delete = function(ssn)
+ 							{
+							  if (confirm("Are you sure you want to delete the client?") == true)   
+							  { 
+							 var id=ssn;
+							  $http({
+							  method:'POST',
+							  url: '/DeleteGuard',
+							  data: {"num" : [id]},
+							  cache : false
+							
+							   }).success(function(response)
+							    {
+							   debugger
+							    alert("successfully deleted");
+							    window.location.href = "/editGuardDetails";
+							    });
+							 
+							 }
+};
+function ValidatePhone(phoneNo)  
+				{  
+				  var numPattern = /^\d{10}$/;  
+				  var numPattern1=/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+				  var numPattern2 = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/;
+				  	if (numPattern.test(phoneNo)){
+				  		return true;
+				  	}	
+			  		else if(numPattern1.test(phoneNo)){
+			  			return true;
+			  		}		  		
+			  		else if(numPattern2.test(phoneNo)){
+			  			return true;
+			  		}
+			  		else{
+			  			return false;
+			  		}
+				} ; 
+				
+
+				function ValidateZip(Zip) {
+   					return /^\d{5}(-\d{4})?$/.test(Zip);
+				}
+				
+function ValidateEmail(email) {
+    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+    return re.test(email);
+}
+
+$scope.EditGuardPersonal=function()
+{
+
+
+
+
+if($scope.id==null)
+{
+alert("There's nothing to edit.Click on the client id on the left side, whose details you want to edit");
+}
+else
+{
+
+					if(!ValidateZip($scope.zip)){
+						alert('Invalid zip code');
+					}
+					else if(!ValidatePhone($scope.phone)){
+						alert('Invalid Phone Number');
+					}
+					else if(!ValidateEmail($scope.mail)){
+					alert('Invalid Email');
+					}
+					else{
+var id=$scope.id;
+var fname=$scope.firstname;
+var lname=$scope.lastname;
+var addr=$scope.addr;
+var city=$scope.city;
+var state= $scope.state;
+var zip= $scope.zip;
+var phone= $scope.phone;
+var mail= $scope.mail;
+
+
+ if (confirm("Are you sure you want to edit the client details?") == true)   
+  { 
+   $http({
+  method:'POST',
+  url: '/EditGuardPersonalDetails',
+  data: {"num" : [id],"fname" : [fname],"lname":[lname],"addr":[addr],"city":[city],"state":[state],"zip":[zip],"phone":[phone],"mail":[mail]}
+
+   }).success(function(response)
+    {
+   
+    alert("successfully edited");
+    $window.location.reload();
+    });
+    }
+    }
+ 
+ }
+ };
+ 
+ $scope.EditGuard=function()
+{
+debugger
+var id=$scope.id;
+ var clientid= $("#selectclientid :selected").text();
+ var buildingid=$("#selectbuildingid :selected").text();
+ var noofwrkinghours=$scope.start;
+ var doj=$('#dojdatepicker').val();
+ var mon,tue,wed,thur,fri,sat; 
+ 
+ if($('#chkbox1').prop('checked')==true)
+ {
+ mon=true;
+ }
+ else
+ {
+ mon=false;
+ }
+ 
+ if($('#chkbox2').prop('checked')==true)
+ {
+ tue=true;
+ }
+ else
+ {
+ tue=false;
+ }
+ 
+ if($('#chkbox3').prop('checked')==true)
+ {
+ wed=true;
+ }
+ else
+ {
+ wed=false;
+ }
+ 
+ if($('#chkbox4').prop('checked')==true)
+ {
+ thur=true;
+ }
+ else
+ {
+ thur=false;
+ }
+ 
+ if($('#chkbox5').prop('checked')==true)
+ {
+ fri=true;
+ }
+ else
+ {
+ fri=false;
+ }
+ 
+ if($('#chkbox6').prop('checked')==true)
+ {
+ sat=true;
+ }
+ else
+ {
+ sat=false;
+ }
+ 
+ if($('#chkbox7').prop('checked')==true)
+ {
+ sun=true;
+ }
+ else
+ {
+ sun=false;
+ }
+
+
+
+  var lastday=$('#lastdaydatepicker').val();
+  if($scope.id==null)
+{
+alert("There's nothing to edit.Click on the client id on the left side, whose details you want to edit");
+}
+else if(clientid==""||buildingid==""||noofwrkinghours==""||doj==""||lastday=="")
+{
+alert("All fields are mandatory");
+}
+else if(mon==false && tue==false && wed==false && thur==false && fri==false && sat==false && sun== false)
+{
+alert("Please select days");
+}
+else
+{
+ if (confirm("Are you sure you want to edit the client details?") == true)   
+  { 
+  
+  $http({
+  method:'POST',
+  url: '/EditGuardDetails',
+  data: {"num" : [id], "clientid" : [clientid],"buildingid" : [buildingid],"noofwrkinghours":[noofwrkinghours],"doj":[doj],"lastday":[lastday],"mon":mon,"tue":tue,"wed":wed,"thur":thur,"fri":fri,"sat":sat,"sun":sun}
+
+   }).success(function(response)
+    {
+   
+    alert("successfully edited");
+    window.location.href = "/editGuardDetails";
+    });
+  
+  
+ 
+ }
+ 
+}
+};
+});
+</script>
+
+</html>

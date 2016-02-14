@@ -1,0 +1,18 @@
+<div id="divlink" ng-controller="ClientMenuController"
+	style="width: 1200px; height: 20px; float: left; background-color: olive;">
+	<a style="padding-left: 10px; color: White;"
+		class="glyphicon glyphicon-home" href="#">Home</a> <a
+		style="padding-left: 10px; color: White;"
+		class="glyphicon glyphicon-warning-sign" href="/viewclientalerts">View-Alerts</a>
+		<a style="padding-left: 10px; color: White;"
+		class="glyphicon glyphicon-file" href="/RequestBuilding">Request_Building</a>
+		<a
+		style="padding-left: 10px; color: White;"
+		ng-click="ViewBuildingReports()" class="glyphicon glyphicon-file"
+		href="/ListbuildingReport">View-Building-Reports</a> <a
+		style="padding-left: 10px; color: White;" ng-click="SearchReports()"
+		class="glyphicon glyphicon-search" href="/SearchReport">Search-Report</a>
+	<a style="padding-left: 10px; color: White;"
+		ng-click="DisplayGuardlocation()"
+		class="glyphicon glyphicon-map-marker" href="/DisplayGuardlocation">Display-guard-location</a>
+</div>

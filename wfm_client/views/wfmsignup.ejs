@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Workforce Management</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="css/signup.css">
+		
+	</head>
+	<body>
+	<div ng-app="" ng-controller="signupController">
+		<nav class="navbar navbar-default">
+			<div class="container">
+				<img src="images/wfmLargeLogo.jpg" style="width:150px;margin-top:20px;margin-bottom:20px;">
+				<a href="/home" style="padding-left:10px;">Home</a>
+				<a href="/contact" style="padding-left:10px;">Contact</a>
+				<div class="navbar-header navbar-right">
+				<div style="margin-top:40px;">
+					<form name="myForm" class="form-inline pull-right">
+						<div class="form-group">
+							<input type="number" ng-model="InputSSN" name="InputSSN" class="form-control" id="InputSSN" placeholder="SSN Number" required>
+						</div>
+						<div class="form-group">
+							<input type="password" ng-model="InputPassword" name="InputPassword" class="form-control" id="InputPassword" placeholder="Password" required>
+						</div>
+						<div class="form-group">
+							<div class="radio-inline">
+								<label>
+									<input type="radio" name="optionsRadios" ng-model="option" id="optionsRadios1" value="1" required>Admin
+								</label>
+							</div>
+							<div class="radio-inline">
+								<label>
+									<input type="radio" name="optionsRadios" ng-model="option" id="optionsRadios2" value="2" required>Client
+								</label>
+							</div>
+							<div class="radio-inline">
+								<label>
+									<input type="radio" name="optionsRadios" ng-model="option" id="optionsRadios3" value="3" required>Guard
+								</label>
+							</div>
+						</div>
+						<button type="submit" ng-click="signin()" ng-disabled="myForm.$invalid" class="btn btn-default btn-primary">Sign in</button>
+					</form>
+				</div>
+				</div>
+			</div>
+		</nav>
+		<div class="wrap">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<form name="myForm1">   
+							<label style="margin-top:20px;color: white;"><h1>Register</h1></label>
+							<hr>
+							<div class="form-group">
+								<div class="row">
+			                        <div class="col-xs-6 col-md-6">
+										<input type="text" name="firstname" ng-model="firstname" class="form-control input-lg" placeholder="First Name" required /> 
+									</div>
+									<div class="col-xs-6 col-md-6">
+			                            <input type="text" name="lastname" ng-model="lastname" class="form-control input-lg" placeholder="Last Name"  required/>
+			                    	</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<input type="number" name="ssn" ng-model="ssn" class="form-control input-lg " placeholder="SSN Number"  required/> 
+							</div>
+							<div class="form-group">
+								 <input type="password" name="InputPassword" class="form-control input-lg" ng-model="password" placeholder="Password (6 or more characters)"  ng-minlength="6" ng-maxlength="20" ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/" required  /><br>
+								<span style="color:red" ng-show="myForm.InputPassword.$error.required && myForm.InputPassword.$dirty">Please enter password</span>
+								<span style="color:red" ng-show="!myForm.InputPassword.$error.required && (myForm.InputPassword.$error.minlength || myForm.InputPassword.$error.maxlength) && myForm.InputPassword.$dirty">Password must be between 6 and 20 characters.</span>
+								<span style="color:red" ng-show="!myForm.InputPassword.$error.required && !myForm.InputPassword.$error.minlength && !myForm.InputPassword.$error.maxlength && myForm.InputPassword.$error.pattern && myForm.InputPassword.$dirty">Must contain one lower &amp; uppercase letter, and one non-alpha character (a number or a symbol)</span>
+							</div>
+							<div class="form-group">
+								 <input type="email" name="email" ng-model="email" class="form-control input-lg" placeholder="Email Address"  required/>
+							</div>
+							<div class="form-group">
+								 <input type="text" name="address" ng-model="address" class="form-control input-lg" placeholder="Address"  required/>
+							</div>
+							<div class="form-group">
+								<div class="select_style">
+		                            <select name="state" ng-model="state.selected" placeholder="State" required>
+		                            	<option ng-repeat="state in states" value="{{ state.abbreviation }}">{{ state.name }}</option>
+										<option value="" selected>---   Select State   ---</option>
+									</select>
+		                    	</div>
+	                    	</div>
+							<div class="form-group">
+								<div class="row">
+			                        <div class="col-xs-4 col-md-6">
+										<input type="text" name="city" ng-model="city" class="form-control input-lg" placeholder="City"  required/> 
+									</div>
+									
+			                    	<div class="col-xs-4 col-md-6">
+			                            <input type="text" name="zip" ng-model="zip" class="form-control input-lg" placeholder="Zip Code"  required/>
+			                    	</div>
+								</div>
+							</div>
+							<div class="form-group">
+								 <input type="number" name="phonenumber" ng-model="phonenumber" class="form-control input-lg" placeholder="Phone Number"  required/>
+							</div>
+							<div class="form-group">
+								<div style="padding-left:10px;">
+									<div class="radio-inline">
+										<label class="radiostyle">
+											<input type="radio" name="optionsRadios" ng-model="radiooption" id="optionsRadios1" value="1" required>Admin
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label class="radiostyle">
+											<input type="radio" name="optionsRadios" ng-model="radiooption" id="optionsRadios2" value="2" required>Client
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<button type="submit" ng-click="signup()" ng-disabled="myForm1.$invalid" class="btn btn-default btn-primary button_signin"><h4>Sign up</h4></button>
+							</div>
+						</form>          
+					</div>            
+				</div>
+			</div>
+		</div>
+	</div>
+		<script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	  	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	  	<script>
+			function signupController($scope,$http,$location) {
+
+
+				$scope.states = [
+							    { name: 'ALABAMA', abbreviation: 'AL'},
+							    { name: 'ALASKA', abbreviation: 'AK'},
+							    { name: 'AMERICAN SAMOA', abbreviation: 'AS'},
+							    { name: 'ARIZONA', abbreviation: 'AZ'},
+							    { name: 'ARKANSAS', abbreviation: 'AR'},
+							    { name: 'CALIFORNIA', abbreviation: 'CA'},
+							    { name: 'COLORADO', abbreviation: 'CO'},
+							    { name: 'CONNECTICUT', abbreviation: 'CT'},
+							    { name: 'DELAWARE', abbreviation: 'DE'},
+							    { name: 'DISTRICT OF COLUMBIA', abbreviation: 'DC'},
+							    { name: 'FEDERATED STATES OF MICRONESIA', abbreviation: 'FM'},
+							    { name: 'FLORIDA', abbreviation: 'FL'},
+							    { name: 'GEORGIA', abbreviation: 'GA'},
+							    { name: 'GUAM', abbreviation: 'GU'},
+							    { name: 'HAWAII', abbreviation: 'HI'},
+							    { name: 'IDAHO', abbreviation: 'ID'},
+							    { name: 'ILLINOIS', abbreviation: 'IL'},
+							    { name: 'INDIANA', abbreviation: 'IN'},
+							    { name: 'IOWA', abbreviation: 'IA'},
+							    { name: 'KANSAS', abbreviation: 'KS'},
+							    { name: 'KENTUCKY', abbreviation: 'KY'},
+							    { name: 'LOUISIANA', abbreviation: 'LA'},
+							    { name: 'MAINE', abbreviation: 'ME'},
+							    { name: 'MARSHALL ISLANDS', abbreviation: 'MH'},
+							    { name: 'MARYLAND', abbreviation: 'MD'},
+							    { name: 'MASSACHUSETTS', abbreviation: 'MA'},
+							    { name: 'MICHIGAN', abbreviation: 'MI'},
+							    { name: 'MINNESOTA', abbreviation: 'MN'},
+							    { name: 'MISSISSIPPI', abbreviation: 'MS'},
+							    { name: 'MISSOURI', abbreviation: 'MO'},
+							    { name: 'MONTANA', abbreviation: 'MT'},
+							    { name: 'NEBRASKA', abbreviation: 'NE'},
+							    { name: 'NEVADA', abbreviation: 'NV'},
+							    { name: 'NEW HAMPSHIRE', abbreviation: 'NH'},
+							    { name: 'NEW JERSEY', abbreviation: 'NJ'},
+							    { name: 'NEW MEXICO', abbreviation: 'NM'},
+							    { name: 'NEW YORK', abbreviation: 'NY'},
+							    { name: 'NORTH CAROLINA', abbreviation: 'NC'},
+							    { name: 'NORTH DAKOTA', abbreviation: 'ND'},
+							    { name: 'NORTHERN MARIANA ISLANDS', abbreviation: 'MP'},
+							    { name: 'OHIO', abbreviation: 'OH'},
+							    { name: 'OKLAHOMA', abbreviation: 'OK'},
+							    { name: 'OREGON', abbreviation: 'OR'},
+							    { name: 'PALAU', abbreviation: 'PW'},
+							    { name: 'PENNSYLVANIA', abbreviation: 'PA'},
+							    { name: 'PUERTO RICO', abbreviation: 'PR'},
+							    { name: 'RHODE ISLAND', abbreviation: 'RI'},
+							    { name: 'SOUTH CAROLINA', abbreviation: 'SC'},
+							    { name: 'SOUTH DAKOTA', abbreviation: 'SD'},
+							    { name: 'TENNESSEE', abbreviation: 'TN'},
+							    { name: 'TEXAS', abbreviation: 'TX'},
+							    { name: 'UTAH', abbreviation: 'UT'},
+							    { name: 'VERMONT', abbreviation: 'VT'},
+							    { name: 'VIRGIN ISLANDS', abbreviation: 'VI'},
+							    { name: 'VIRGINIA', abbreviation: 'VA'},
+							    { name: 'WASHINGTON', abbreviation: 'WA'},
+							    { name: 'WEST VIRGINIA', abbreviation: 'WV'},
+							    { name: 'WISCONSIN', abbreviation: 'WI'},
+							    { name: 'WYOMING', abbreviation: 'WY' }
+							];
+				var validateSSN= function(ssn){
+					var numPattern = /^\d{9}$/; 
+					if (numPattern.test(ssn)){
+				  		return true;
+				  	}	
+					else{
+						return false;
+					}
+				}
+
+				function ValidateZip(Zip) {
+   					return /^\d{5}(-\d{4})?$/.test(Zip);
+				}
+
+				$scope.signup = function(){
+
+					if (!validateSSN($scope.ssn)){
+						alert('Invalid SSN Number, must be a 9 digit number');
+					}
+					else if(!ValidateZip($scope.zip)){
+						alert('Invalid zip code');
+					}
+					else if(!ValidatePhone($scope.phonenumber)){
+						alert('Invalid Phone Number');
+					}
+					else{
+						alert($scope.radiooption);
+						$http({
+							method: 'POST',
+							url: '/aftersignup',
+							data:{ 
+							"firstname": $scope.firstname,
+							"lastname": $scope.lastname,
+							"ssn": $scope.ssn, 
+							"password": $scope.password,
+							"email": $scope.email,
+							"address": $scope.address,
+							"city": $scope.city, 
+							"zip": $scope.zip,
+							"state": $scope.state.selected,
+							"phonenumber" : $scope.phonenumber,
+							"type": $scope.radiooption
+							}  
+							}).success(function(response){
+								$scope.firstname = "";
+								$scope.lastname ="";
+								$scope.ssn ="";
+								$scope.email ="";
+								$scope.password ="";
+								$scope.address ="";
+								$scope.zip ="";
+								$scope.city ="";
+								$scope.state ="";
+								$scope.phonenumber ="";
+								$scope.radiooption = false;
+								$scope.state.selected = "";
+								if(response.signup == "Fail")
+								{
+									alert('User Already Exists');
+									window.location = '/login';
+								}
+								else{
+									if(response.signup == 1){
+										window.location = '/admin';
+									}
+									else if(response.signup == 2){
+										window.location = '/client';
+									}
+									else{
+										alert('Try Again');
+										window.location = '/signup';
+									}
+								}
+							}).error(function(error){
+							alert(error);
+							});
+					}
+				};
+
+				function ValidatePhone(phoneNo)  
+				{  
+				  var numPattern = /^\d{10}$/;  
+				  var numPattern1=/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+				  var numPattern2 = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/;
+				  	if (numPattern.test(phoneNo)){
+				  		return true;
+				  	}	
+			  		else if(numPattern1.test(phoneNo)){
+			  			return true;
+			  		}		  		
+			  		else if(numPattern2.test(phoneNo)){
+			  			return true;
+			  		}
+			  		else{
+			  			return false;
+			  		}
+				} ; 
+
+				$scope.signin = function(){
+					if (!validateSSN($scope.InputSSN)){
+						alert('Invalid SSN Number, must be a 9 digit number');	
+					}
+					else{
+						$http({
+							method: 'POST',
+							url: '/afterlogin',
+							data:{ 
+							"ssn": $scope.InputSSN, 
+							"password": $scope.InputPassword,
+							"type": $scope.option
+							}  
+							}).success(function(response){
+								$scope.InputSSN = "";
+								$scope.InputPassword ="";
+								$scope.option = false;
+								if(response.login == "Fail")
+								{
+									alert('Not Authenticated, Please check the credentials');
+									window.location = '/login';
+								}
+								else{
+									if(response.login == 1){
+										window.location = '/admin';
+									}
+									else if(response.login == 2){
+										window.location = '/client';
+									}
+									else if(response.login == 3){
+										window.location = '/guard';
+									}
+									else{
+										alert('Try Again');
+										window.location = '/login';
+									}
+								}
+							}).error(function(error){
+							alert(error);
+							});
+					}
+
+				};
+			}
+	</script>
+	</body>
+</html>

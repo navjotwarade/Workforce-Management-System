@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html class="fullpage">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Workforce Management</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
+	<body>
+	<div ng-app="" ng-controller="loginController">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3 col-md-13 col-sm-12 col-xs-12">
+					<img src="images/channel_logo.jpg" style="padding-top:40px;width:420px;"><br><br><br>
+					<form name="myForm" class="form-horizontal">
+						<div class="form-group">
+							<label for="InputSSN" class="col-sm-2 control-label">Username</label>
+							<div class="col-sm-10">
+								<input type="number" ng-model="InputSSN" name="InputSSN" class="form-control" id="InputSSN" placeholder="SSN Number" required>
+							</div>
+						</div>
+						<br>
+						<div class="form-group">
+							<label for="InputPassword" class="col-sm-2 control-label">Password</label>
+							<div class="col-sm-10">
+								<input type="password" ng-model="InputPassword" name="InputPassword" class="form-control" id="InputPassword" placeholder="Password" required>
+							</div>
+						</div>
+						<div class="form-group">
+							<div style="padding-left:90px;">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="optionsRadios" ng-model="option" id="optionsRadios1" value="1" required>Admin
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="optionsRadios" ng-model="option" id="optionsRadios2" value="2" required>Client
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="optionsRadios" ng-model="option" id="optionsRadios3" value="3" required>Guard
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<button type="submit" ng-click="signin()" ng-disabled="myForm.$invalid" class="btn btn-default btn-primary button_signin">Sign in</button>
+						</div>
+						<div class="form-group">
+							<hr>
+							<a style="padding-left:40px;" href="/home">Home</a>
+							<a style="padding-left:240px;" href="/signup">Register Now</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+		<script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	  	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+		<script>
+			function loginController($scope,$http,$location) {
+
+				var validateSSN= function(ssn){
+					var numPattern = /^\d{9}$/; 
+					if (numPattern.test(ssn)){
+				  		return true;
+				  	}	
+					else{
+						return false;
+					}
+				}
+
+				$scope.signin = function(){
+					if (!validateSSN($scope.InputSSN)){
+						alert('Invalid SSN Number, must be a 9 digit number');	
+					}
+					else{
+						$http({
+							method: 'POST',
+							url: '/afterlogin',
+							data:{ 
+							"ssn": $scope.InputSSN, 
+							"password": $scope.InputPassword,
+							"type": $scope.option
+							}  
+							}).success(function(response){
+								$scope.InputSSN = "";
+								$scope.InputPassword ="";
+								$scope.option = false;
+								if(response.login == "Fail")
+								{
+									alert('Not Authenticated, Please check the credentials');
+									window.location = '/login';
+								}
+								else{
+									if(response.login == 1){
+										window.location = '/admin';
+									}
+									else if(response.login == 2){
+										window.location = '/client';
+									}
+									else if(response.login == 3){
+										window.location = '/guard';
+									}
+									else{
+										alert('Try Again');
+										window.location = '/login';
+									}
+								}
+							}).error(function(error){
+							alert(error);
+							});
+					}
+
+				};
+			}
+	</script>
+	</body>
+</html>

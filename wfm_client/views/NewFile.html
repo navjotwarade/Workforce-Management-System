@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html ng-app="AdminWFMG">
+<meta charset="utf-8" />
+<head>
+<title>index</title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script data-require="angular.js@1.3.9" data-semver="1.3.9"
+	src="https://code.angularjs.org/1.3.9/angular.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+</head>
+<body
+	style="margin-top: -50px; background-position: center; background-image: url("");">
+	<%- include CommonHeader.ejs %> <%- include AdminCommonMenu.ejs %>
+
+	<br>
+	<br>
+	<br>
+	<br>
+	<div ng-controller="AdminClientViewController">
+		<div class="modal-body">
+			<div class="first-column">
+
+				<form>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Client_ID</th>
+								<th>Name</th>
+								<th></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tr ng-repeat="d in result">
+							<td><a href="" ng-click="showdetails(d.SSN)">{{ d.SSN}}</td>
+							<td>{{d.Firstname}}</td>
+							<br>
+							<td><input type="submit" value="Delete"
+								class="btn btn-primary" ng-click="delete(d.SSN)"></td>
+
+							<td><input type="submit" value="Add Building"
+								class="btn btn-primary"></td>
+					</table>
+			</div>
+			<div class="second-column">
+				<div class="col-sm-6">
+					<h3>
+						<strong>ClientId :</strong> <input type="text"
+							class="form-control" ng-model="id" ng-readonly="id"></input><br>
+					</h3>
+					<div class="input-group">
+						<h3>
+							<strong>Account Details</strong>
+						</h3>
+						<td><strong>Monthly Service Charge</strong></td>
+						<td><input type="text" class="form-control"
+							ng-model="service"></input></td> <br>
+
+						<td><strong>Balance</strong><br> <input type="text"
+							class="form-control" ng-model="bal"></input><br></td>
+
+						<tr>
+							<td><strong>Start Date</strong><br> <input type="text"
+								class="form-control" ng-model="start"></input><br></td>
+
+						</tr>
+						<strong>End Date</strong><br> <input type="text"
+							class="form-control" ng-model="end"></input><br> <br> <input
+							type="submit" value="Edit" class="btn btn-primary"
+							ng-click="EditClient()"> <br> <br>
+
+						<h3>
+							<strong>Personal Details</strong>
+						</h3>
+						<strong>First Name:</strong><br> <input type="text"
+							class="form-control" ng-model="firstname"></input> <br> <strong>Last
+							Name:</strong> <input type="text" class="form-control" ng-model="lastname"></input><br>
+						<br> <strong>Address</strong><br> <input type="text"
+							class="form-control" ng-model="addr"></input><br> <br>
+						<strong>City</strong><br> <input type="text"
+							class="form-control" ng-model="city"></input><br> <br>
+						<strong>State</strong><br> <input type="text"
+							class="form-control" ng-model="state"></input><br> <br>
+						<strong>Zip Code</strong><br> <input type="text"
+							class="form-control" ng-model="zip"></input><br> <br> <strong>Phone
+							Number</strong><br> <input type="text" class="form-control"
+							ng-model="phone"></input><br> <br> <strong>Email
+							ID</strong><br> <input type="text" class="form-control"
+							ng-model="mail"></input><br> <br>
+
+						<td><input type="submit" value="Edit" class="btn btn-primary"
+							ng-click="EditPersonal()"></td>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script>
+	var app = angular.module('AdminWFMG', []);
+	app.controller('AdminMenuController', function($scope, $http, $window,
+			$filter) {
+
+		alert("hello");
+	});
+
+	app
+			.controller(
+					'AdminClientViewController',
+					function($scope, $http, $window, $filter) {
+						$http({
+							method : 'GET',
+							url : '/ClientList',
+							cache : false
+
+						}).success(function(response) {
+							alert("success");
+							debugger
+							console.log(JSON.stringify(response));
+							for (var i = 0; i < response.length; i++) {
+								console.log(response[i]);
+
+							}
+
+							$scope.result = response;
+
+						});
+
+						$scope.showdetails = function(ssn) {
+							alert("Show");
+							var num = ssn;
+
+							$http({
+								method : 'POST',
+								url : '/ClientDetails2',
+								data : {
+									"num" : [ num ]
+								},
+								cache : false
+
+							})
+									.success(
+											function(response) {
+												debugger
+												alert("success")
+												$scope.data = JSON
+														.stringify(response);
+												for (var i = 0; i < response[0].length; i++) {
+													if (num == response[0][i].SSN) {
+														$scope.id = response[0][i].SSN;
+														$scope.service = response[0][i].Monthly_service_charge;
+														$scope.bal = response[0][i].Balance;
+														var date = response[0][i].Start_Date;
+														$scope.start = $filter(
+																'date')(
+																new Date(),
+																'yyyy/MM/dd');
+														var edate = response[0][i].End_Date;
+														$scope.end = $filter(
+																'date')(
+																new Date(),
+																'yyyy/MM/dd');
+														$scope.firstname = response[0][i].Firstname;
+														$scope.lastname = response[0][i].Lastname;
+														$scope.addr = response[0][i].Address;
+														$scope.city = response[0][i].City;
+														$scope.state = response[0][i].State;
+														$scope.zip = response[0][i].Zipcode;
+														$scope.phone = response[0][i].Phone_number;
+														$scope.mail = response[0][i].EmailID;
+													}
+												}
+											});
+
+						}
+						 $scope.delete = function(ssn)
+ {
+							  if (confirm("Are you sure you want to delete the client?") == true)   
+							  { 
+							 var id=ssn;
+							  $http({
+							  method:'POST',
+							  url: '/DeleteClient',
+							  data: {"num" : [id]}
+							
+							   }).success(function(response)
+							    {
+							   
+							    alert("successfully deleted");
+							    $window.location.reload();
+							    });
+							 
+							 }
+};
+
+$scope.EditPersonal=function()
+{
+if($scope.id==null)
+{
+alert("There's nothing to edit.Click on the client id on the left side, whose details you want to edit");
+}
+else
+{
+var id=$scope.id;
+var fname=$scope.firstname;
+var lname=$scope.lastname;
+var addr=$scope.addr;
+var city=$scope.city;
+var state= $scope.state;
+var zip= $scope.zip;
+var phone= $scope.phone;
+var mail= $scope.mail;
+
+
+ if (confirm("Are you sure you want to edit the client details?") == true)   
+  { 
+   $http({
+  method:'POST',
+  url: '/EditPersonalDetails',
+  data: {"num" : [id],"fname" : [fname],"lname":[lname],"addr":[addr],"city":[city],"state":[state],"zip":[zip],"phone":[phone],"mail":[mail]}
+
+   }).success(function(response)
+    {
+   
+    alert("successfully edited");
+    $window.location.reload();
+    });
+    }
+ 
+ }
+ };
+ 
+ $scope.EditClient=function()
+{
+if($scope.id==null)
+{
+alert("There's nothing to edit.Click on the client id on the left side, whose details you want to edit");
+}
+else
+{
+
+var id=$scope.id;
+ var service=$scope.service;
+ var bal=$scope.bal;
+ var start=$scope.start;
+ var end=$scope.end;
+
+ if (confirm("Are you sure you want to edit the client details?") == true)   
+  { 
+   $http({
+  
+   
+  method:'POST',
+  url: '/EditClientDetails',
+  data: {"num" : [id], "service" : [service],"bal" : [bal],"start":[start],"end":[end]}
+
+   }).success(function(response)
+    {
+   
+    alert("successfully edited");
+    $window.location.reload();
+    });
+ 
+ }
+ 
+}
+};
+					});
+</script>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+</head>
+
+<body ng-app="App" ng-controller="userCtrl1">
+	<div class="container">
+		<%- include CommonHeader.ejs %> <br>
+		<br>
+		<br>
+
+
+
+
+		<form class="form-horizontal">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Alert ID:</label>
+				<div class="col-sm-10">
+					<input type="text" ng-model="alertid" 
+						placeholder="alert id">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Alert Type:</label>
+				<div class="col-sm-10">
+					<input type="text" ng-model="alerttype"
+						placeholder="alert type">
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Alert Description:</label>
+				<div class="col-sm-10">
+					<input type="text" ng-model="alertdescription" 
+						placeholder="description">
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Severity:</label>
+				<div class="col-sm-10">
+					<input type="text" ng-model="severity" 
+						placeholder="severity">
+				</div>
+			</div>
+
+		</form>
+
+		<hr>
+		<button class="btn btn-success" ng-click="submit()">
+			<span class="glyphicon glyphicon-save"></span>Submit
+		</button>
+
+	</div>
+
+<script>
+angular.module('App', []).controller('userCtrl1',function($scope, $http, $location) {
+
+$scope.submit = function() {
+alert("hmmmi"+$scope.alertid);
+$http({
+          method: 'POST',
+          url: '/submitAlertPage',
+          data: {"alertid":$scope.alertid,"type":$scope.alerttype,"desc":$scope.alertdescription,"severe":$scope.severity}
+	           
+     }).success(function(response){
+	           alert(JSON.stringify(response));
+	           
+	 }).error(function(error){
+	            alert("error");
+     });
+
+};
+});
+</script>
+
+</body>
+</html>

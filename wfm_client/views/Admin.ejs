@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html ng-app="AdminWFMG">
+<meta charset="utf-8" />
+<head>
+<title>Admin</title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script data-require="angular.js@1.3.9" data-semver="1.3.9"
+	src="https://code.angularjs.org/1.3.9/angular.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head>
+<body
+	style="margin-top: -50px; background-position: center; background-image: url('images/building.jpg');">
+	<%- include CommonHeader.ejs %> <%- include AdminCommonMenu.ejs %>
+	<div id="Body" style="float: left; width: 1200px; height: 600px;">
+		<div class="thumbnail"
+			style="text-align: center; width: 150px; float: left; height: 200px;">
+			<img src="images/nophoto.jpg" height="80%" width="100%" alt="img">
+			<button style="background-color: transparent;">
+				<span style="font-size: large;"
+					class="glyphicon-large glyphicon glyphicon-camera"></span> Change
+				Photo
+			</button>
+		</div>
+	<div ng-controller="AdminController">
+		<div style="width: 1050px; float: left; height: 200px; background-color: white;" >
+			<label style="padding-left:30px;Padding-top:30px;">Name :</label><label>{{AdminName}}</label><br>
+			<label style="padding-left:30px;">SSN :</label><label>{{AdminSSN}}</label><br>
+			<label style="padding-left:30px;">Address :</label><label>{{address}}</label><br>
+			<label style="padding-left:30px;">Email :</label><label>{{email}}</label><br>
+			<label style="padding-left:30px;">Phone Number :</label><label>{{phone}}</label>
+		</div>
+	</div>
+	</div>
+</body>
+<script>
+	var app = angular.module("AdminWFMG", []);
+</script>
+<script>
+	app.controller("AdminMenuController", function($sce, $scope, $http) {
+		$('#Welcome').text("Welcome Admin");
+		
+	});
+</script>
+<script>
+	app.controller("AdminController", function($sce, $scope, $http) {
+		var getAdminDetails = function() {
+
+				//alert("here");
+						$http.get("/getAdminDetails") 
+						.success(function(response)
+						{
+							//alert('success');
+								$scope.AdminName=response[0].Firstname +" "+ response[0].Lastname;
+								//alert($scope.AdminName);
+								$scope.AdminSSN=response[0].SSN;
+								$scope.address=response[0].Address + ", "+response[0].City + ", "+response[0].State+ "-"+response[0].Zipcode;
+								//alert(address);
+								$scope.email =response[0].EmailID;
+								$scope.phone =response[0].Phone_number;
+						}).error(function(error)
+							{
+								alert(error);
+							});
+					};
+					getAdminDetails();
+	});
+</script>
+</html>

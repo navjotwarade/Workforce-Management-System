@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html ng-app="AdminWFMG">
+<meta charset="utf-8" />
+<head>
+<title>Workforce Management</title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script data-require="angular.js@1.3.9" data-semver="1.3.9"
+	src="https://code.angularjs.org/1.3.9/angular.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+</head>
+<body
+	style="margin-top: -50px; background-position: center; background-image: url("");">
+	<%- include CommonHeader.ejs %> <%- include AdminCommonMenu.ejs %>
+
+	<br>
+	<br>
+	<br>
+	<br>
+	<div ng-controller="AdminClientViewController">
+		<div class="modal-body">
+			<div class="first-column">
+			Search: <input ng-model="query">
+			
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Guard Id</th>
+								<th>Name</th>								
+							</tr>
+						</thead>
+						<tr ng-repeat="d in result | filter:query">
+							<td><a href=""
+								ng-click="showdetails(d.SSN,d.Client_ID,d.Building_ID)">{{
+									d.SSN}}</td>
+							<td>{{d.Firstname}}</td>
+							<br>
+							<td><input type="submit" value="Delete"
+								class="btn btn-primary" ng-click="delete(d.SSN)"></td>
+						</tr>
+					</table>
+			</div>
+		</div>
+	</div>		
+</body>
+<script>
+	var app = angular.module('AdminWFMG', []);
+	app.controller('AdminMenuController', function($scope, $http, $window,
+			$filter) {
+
+		alert("hello");
+	});
+	app
+			.controller(
+					'AdminClientViewController',
+					function($scope, $http, $window, $filter) {
+					$('#Welcome').text("Welcome Admin");
+					$http({
+							method : 'GET',
+							url : '/Guardlist',
+							cache : false
+
+						}).success(function(response) {
+							alert("success");
+							debugger
+							console.log(JSON.stringify(response));
+							for (var i = 0; i < response.length; i++) {
+								console.log(response[i]);
+
+							}
+
+							$scope.result = response;
+
+						});
+						
+					});
+</script>	
+</html>

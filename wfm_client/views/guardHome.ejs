@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html ng-app="GuardWFMG">
+<meta charset="utf-8" />
+<head>
+<title>Guard</title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script data-require="angular.js@1.3.9" data-semver="1.3.9"
+	src="https://code.angularjs.org/1.3.9/angular.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head>
+<body
+	style="margin-top: -50px; background-position: center; background-image: url('images/building.jpg');">
+	<%- include CommonHeader.ejs %> <%- include GuardCommonMenu.ejs %>
+	<div id="Body" style="float: left; width: 1200px; height: 600px;">
+		<div class="thumbnail"
+			style="text-align: center; width: 150px; float: left; height: 300px;">
+			<img src="images/nophoto.jpg" height="80%" width="100%" alt="img">
+			<button style="background-color: transparent;">
+				<span style="font-size: large;"
+					class="glyphicon-large glyphicon glyphicon-camera"></span> Change
+				Photo
+			</button>
+		</div>
+	<div ng-controller="GuardController">
+		<div style="width: 1050px; float: left; height: 300px; background-color: white;" >
+			<label style="padding-left:30px;Padding-top:30px;">Name :</label><label>{{GuardName}}</label><br>
+			<label style="padding-left:30px;">SSN :</label><label>{{GuardSSN}}</label><br>
+			<label style="padding-left:30px;">Address :</label><label>{{address}}</label><br>
+			<label style="padding-left:30px;">Email :</label><label>{{email}}</label><br>
+			<label style="padding-left:30px;">Phone Number :</label><label>{{phone}}</label><br>
+			<label style="padding-left:30px;">Number of Hours :</label><label>{{NOH}}</label><br>
+				<label style="padding-left:30px;">Bulding Id :</label><label>{{buildid}}</label><br>
+				<label style="padding-left:30px;">Date of Joining:</label><label>{{DOJ}}</label><br>
+				<label style="padding-left:30px;">Last Day :</label><label>{{lastday}}</label><br>
+		</div>
+	</div>
+	</div>
+</body>
+<script>
+	var app = angular.module("GuardWFMG", []);
+</script>
+<script>
+	app.controller("GuardMenuController", function($sce, $scope, $http) {
+		$('#Welcome').text("Welcome Guard");
+		
+	});
+</script>
+<script>
+	app.controller("GuardController", function($sce, $scope, $http) {
+		var getGuardDetails = function() {
+
+				alert("here");
+						$http.get("/getGuardDetails") 
+						.success(function(response)
+						{
+							alert('success');
+								$scope.GuardName=response[0].Firstname +" "+ response[0].Lastname;
+								//alert($scope.GuardName);
+								$scope.GuardSSN=response[0].SSN;
+								//alert($scope.GuardSSN);
+								$scope.address=response[0].Address + ", "+response[0].City + ", "+response[0].State+ "-"+response[0].Zipcode;
+								//alert(address);
+								$scope.email =response[0].EmailID;
+								$scope.phone =response[0].Phone_number;
+						}).error(function(error)
+							{
+								alert(error);
+							});
+					};
+					var getGuard = function() {
+
+				//alert("here");
+						$http.get("/getGuard") 
+						.success(function(response)
+						{
+							alert('success');
+								$scope.NOH =response[0].No_of_Hours_perday;
+								$scope.buildid =response[0].Building_ID;
+								$scope.DOJ =response[0].DateofJoining;
+								$scope.lastday =response[0].LastDay;
+						}).error(function(error)
+							{
+								alert(error);
+							});
+					};
+					getGuardDetails();
+					getGuard();
+	});
+</script>
+</html>

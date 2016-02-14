@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html ng-app="ReportWFMG">
+<meta charset="utf-8" />
+<head>
+<title>Search Report Results</title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script data-require="angular.js@1.3.9" data-semver="1.3.9"
+	src="https://code.angularjs.org/1.3.9/angular.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head>
+<body
+	style="margin-top: -50px; background-position: center; background-image: url('/Images/building.jpg');">
+	<%- include CommonHeader.ejs %> <%- include ClientCommonMenu.ejs %>
+	<div id="Body"
+		style="float: left; width: 1200px; height: 600px; border-style: solid; background-color: white; border-color: black; border-width: thin;">
+		<div align="center" style="width: 100%; float: left;">
+			<h4 style="float: left;">Search Results</h4>
+		</div>
+		<div id="divbuildingreportlist" style="width: 100%; float: left;">
+			<h1>There are no reports for this building</h1>
+		</div>
+	</div>
+</body>
+<script>
+	var app = angular.module("ReportWFMG", []);
+</script>
+<script>
+	app
+			.controller(
+					"ClientMenuController",
+					function($sce, $scope, $http) {
+						$('#Welcome').text("Welcome Client");
+						$("#datepicker").datepicker();
+						
+						$http({
+							method : 'POST',
+							url : '/FindSearchReportResults',
+							cache : false
+
+						})
+								.success(
+										function(response) {
+											if (response.data[1][0].TotalReports >= 1) {
+												var buildinglist = "<table>";
+												for (i = 0; i < response.data[1][0].TotalReports; i++) {
+													buildinglist = buildinglist
+															+ '<tr><td><a class="BuildingViewReportLink" style="text-decoration: underline;" href="#">'
+															+ 'BuildingID-'
+															+ response.data[2][i].Building_ID
+															+ '/'
+															+ "Generated on "
+															+ response.data[2][i].Raised_On
+															+ ",by the Guard:"
+															+ response.data[2][i].GuardName
+															+ "("
+															+ response.data[2][i].Guard_ID
+															+ ")"
+															+ '</a></td></tr>';
+												}
+												buildinglist = buildinglist
+														+ '</table>';
+												document
+														.getElementById("divbuildingreportlist").innerHTML = $sce
+														.trustAsHtml(buildinglist);
+												$(".BuildingViewReportLink")
+														.click(
+																function(e) {
+																	var linktext = $(
+																			e.target)
+																			.text();
+																	var buildingid = linktext
+																			.substr(
+																					linktext
+																							.indexOf("-") + 1,
+																					linktext
+																							.indexOf("/")
+																							- linktext
+																									.indexOf("-")
+																							- 1);
+																	var reportdate = linktext
+																			.substr(
+																					linktext
+																							.indexOf("on") + 2,
+																					linktext
+																							.indexOf(",")
+																							- linktext
+																									.indexOf("on")
+																							- 2);
+																	reportdate = reportdate
+																			.trim();
+																	var guardid = linktext
+																			.substr(
+																					linktext
+																							.indexOf("(") + 1,
+																					linktext
+																							.indexOf(")")
+																							- linktext
+																									.indexOf("(")
+																							- 1);
+																	window.location = '/ViewReports/'
+																			+ reportdate
+																			+ '/'
+																			+ guardid
+																			+ '/'
+																			+ buildingid;
+																});
+											}
+											alert("success");
+										}).error(function(error) {
+									alert("error")
+								});
+					});
+</script>
+</html>

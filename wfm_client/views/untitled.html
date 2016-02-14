@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Multi_Tenant_App</title>
+		<link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="stylesheets/styleSignup.css">
+	</head>
+	<body>
+	<div ng-app="signup" ng-controller="signupCtrl">
+		<nav class="navbar navbar-default">
+			<div class="container">
+				<img src="images/wfmLargeLogo.jpg" style="width:150px;margin-top:20px;margin-bottom:20px;">
+				<a href="/home" style="padding-left:10px;">Home</a>
+				<a href="/contact" style="padding-left:10px;">Contact</a>
+				<div class="navbar-header navbar-right">
+					<div style="margin-top:40px;">
+						<form class="form-inline pull-right">
+							<div class="form-group">
+								<input type="number" ng-model="InputSSN" name="InputSSN" class="form-control" id="InputSSN" placeholder="SSN Number" required>
+							</div>
+							<div class="form-group">
+								<input type="password" ng-model="InputPassword" name="InputPassword" class="form-control" id="InputPassword" placeholder="Password" required>
+							</div>
+							<div class="form-group">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="optionsRadios" ng-model="option" id="optionsRadios1" value="1" required>Admin
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="optionsRadios" ng-model="option" id="optionsRadios2" value="2" required>Client
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="optionsRadios" ng-model="option" id="optionsRadios3" value="3" required>Guard
+									</label>
+								</div>
+							</div>
+							<button type="submit" ng-click="signin()" class="btn btn-default btn-primary">Sign in</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<div class="wrap">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<form name="myForm">   
+							<label style="margin-top:20px;color: white;"><h1>Register</h1></label>
+							<hr>
+							<div class="form-group">
+								<div class="row">
+			                        <div class="col-xs-6 col-md-6">
+										<input type="text" name="firstname" ng-model="firstname" class="form-control input-lg" placeholder="First Name" required /> 
+									</div>
+									<div class="col-xs-6 col-md-6">
+			                            <input type="text" name="lastname" ng-model="lastname" class="form-control input-lg" placeholder="Last Name"  required/>
+			                    	</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<input type="number" name="ssn" ng-model="ssn" class="form-control input-lg " placeholder="SSN Number"  required/> 
+							</div>
+							<div class="form-group">
+								 <input type="password" name="InputPassword" class="form-control input-lg" ng-model="password" placeholder="Password (6 or more characters)"  ng-minlength="6" ng-maxlength="20" ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/" required  /><br>
+								<span style="color:red" ng-show="myForm.InputPassword.$error.required && myForm.InputPassword.$dirty">Please enter password</span>
+								<span style="color:red" ng-show="!myForm.InputPassword.$error.required && (myForm.InputPassword.$error.minlength || myForm.InputPassword.$error.maxlength) && myForm.InputPassword.$dirty">Password must be between 6 and 20 characters.</span>
+								<span style="color:red" ng-show="!myForm.InputPassword.$error.required && !myForm.InputPassword.$error.minlength && !myForm.InputPassword.$error.maxlength && myForm.InputPassword.$error.pattern && myForm.InputPassword.$dirty">Must contain one lower &amp; uppercase letter, and one non-alpha character (a number or a symbol)</span>
+							</div>
+							<div class="form-group">
+								 <input type="email" name="email" ng-model="email" class="form-control input-lg" placeholder="Email Address"  required/>
+							</div>
+							<div class="form-group">
+								 <input type="text" name="address" ng-model="address" class="form-control input-lg" placeholder="Address"  required/>
+							</div>
+							<div class="form-group">
+								<div class="select_style">
+										<select ng-model="state.selected" required>
+										<option ng-repeat="state in states" value="{{ state.abbreviation }}">{{ state.name }}</option>
+										<option value="" selected>---Select State---</option>
+									</select>
+		                    	</div>
+	                    	</div>
+							<div class="form-group">
+								<div class="row">
+			                        <div class="col-xs-4 col-md-6">
+										<input type="text" name="city" ng-model="city" class="form-control input-lg" placeholder="City"  required/> 
+									</div>
+									
+			                    	<div class="col-xs-4 col-md-6">
+			                            <input type="text" name="zip" ng-model="zip" class="form-control input-lg" placeholder="Zip Code"  required/>
+			                    	</div>
+								</div>
+							</div>
+							<div class="form-group">
+								 <input type="number" name="phonenumber" ng-model="phonenumber" class="form-control input-lg" placeholder="Phone Number"  required/>
+							</div>
+							<div class="form-group">
+								<div style="padding-left:10px;">
+									<div class="radio-inline">
+										<label class="radiostyle">
+											<input type="radio" name="optionsRadios" ng-model="radiooption" id="optionsRadios1" value="option1" required>Admin
+										</label>
+									</div>
+									<div class="radio-inline">
+										<label class="radiostyle">
+											<input type="radio" name="optionsRadios" ng-model="radiooption" id="optionsRadios2" value="option2" required>Client
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<button type="submit" ng-click="signup()" class="btn btn-default btn-primary button_signin"><h4>Sign up</h4></button>
+							</div>
+						</form>          
+					</div>            
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="javascripts/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="javascripts/bootstrap.min.js"></script>
+	<script type="text/javascript" src="javascripts/bootstrap-hover-dropdown.min.js"></script>
+	<script type="text/javascript" src="angular/angular.min.js"></script>
+	<script>
+	  var app = angular.module('signup', []);
+      app.controller('signupCtrl', function($http,$scope) {
+      		$scope.techs = {};
+      		//$scope.techs=[ { technologyId: 1, technologyName: 'Waterfall' },{ technologyId: 2, technologyName: 'Scrum' },{ technologyId: 3, technologyName: 'Kanban' } ]
+			$http.get("/getTechnology")
+			.success(function(response){
+				$scope.techs = response.data;
+			}).error(function(error){
+				alert(error);
+			});
+			
+	    	$scope.signUp = function() {
+				//alert('here');
+				//alert($scope.InputEmail);
+				$http({
+					method: 'POST',
+					url: '/aftersignup',
+					data:{ 
+							"firstname": $scope.InputFirstName,
+							"lastname": $scope.InputLastName,
+							"username": $scope.InputEmail, 
+							"password": $scope.InputPassword,
+							"type": $scope.tech.selected
+						}  
+				}).success(function(response){
+					//alert(JSON.stringify(response));
+					if(response.signup == "Waterfall"){
+					//alert('hi');
+						window.location = '/Waterfall';
+					}
+					else if(response.signup == "Scrum"){
+						window.location = '/Scrum';
+					}
+					else if(response.signup == "Kanban"){
+						window.location = '/Kanban';
+					}
+					else{
+						alert("You have an account already!!!!");
+						window.location = '/signup';
+					}
+				}).error(function(error){
+						alert(error);
+					});
+				};
+				
+			$scope.login = function() {
+				$http({
+					method: 'POST',
+					url: '/afterlogin',
+					data:{ 
+						"username": $scope.InputEmail, 
+						"password": $scope.InputPassword,
+						"type": $scope.logintech.selected
+					}  
+					}).success(function(response){
+						//alert(JSON.stringify(response));
+					if(response.login == "Waterfall"){
+					//alert('hi');
+						window.location = '/Waterfall';
+					}
+					else if(response.login == "Scrum"){
+						window.location = '/Scrum';
+					}
+					else if(response.signloginup == "Kanban"){
+						window.location = '/Kanban';
+					}
+					else{
+						alert("Error occured !!! Please try again....");
+						window.location = '/signup';
+					}
+					}).error(function(error){
+						alert(error);
+					});
+				};
+      	});
+	</script>
+	</body>
+</html>

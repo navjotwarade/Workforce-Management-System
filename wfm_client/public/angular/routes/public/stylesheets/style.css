@@ -1,0 +1,42 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.floatr{
+	float:right;
+	
+}
+.inline{
+	display:inline;
+}
+.skillbutton{
+border-radius: 6px;
+    font-size: 17px;
+    line-height: 1.333;
+    padding: 4px;
+}
+.removeskill{
+border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.333;
+    padding: 4px;
+}
+ .bshadow{
+	box-shadow: 0 0 30px black;
+} 
+
+.h4pad{
+	padding :10px;
+}
+
+.bgblue{
+	background-color : #483D8B
+}
+.bgimg{
+	background-image : "/photos/back.jpg";
+}

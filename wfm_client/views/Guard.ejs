@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html ng-app="GuardWFMG">
+<meta charset="utf-8" />
+<head>
+<title>Guard</title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script data-require="angular.js@1.3.9" data-semver="1.3.9"
+	src="https://code.angularjs.org/1.3.9/angular.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head>
+<body
+	style="margin-top: -50px; background-position: center; background-image: url('../Images/building.jpg');">
+	<%- include CommonHeader.ejs %> <%- include GuardCommonMenu.ejs %>
+	<div id="Body" style="float: left; width: 1200px; height: 600px;">
+		<div class="thumbnail"
+			style="text-align: center; width: 150px; float: left; height: 200px;">
+			<img src="../Images/nophoto.jpg" height="80%" width="100%" alt="img">
+			<button style="background-color: transparent;">
+				<span style="font-size: large;"
+					class="glyphicon-large glyphicon glyphicon-camera"></span> Change
+				Photo
+			</button>
+		</div>
+		<div
+			style="width: 1050px; float: left; height: 200px; background-color: white;">
+			<h5 style="float: left; text-align: right; width: 10%">Name:</h5>
+			<h5 style="float: left; width: 90%" id="Name">Sudhindra</h5>
+			<h5 style="float: left; text-align: right; width: 10%">Role:</h5>
+			<h5 style="float: left; width: 90%" id="Name">Guard</h5>
+			<h5 style="float: left; text-align: right; width: 10%">SSN:</h5>
+			<h5 style="float: left; width: 90%" id="Name">123456789</h5>
+			<h5 style="float: left; text-align: right; width: 10%">Address:</h5>
+			<h5 style="float: left; width: 90%" id="Name">USA</h5>
+		</div>
+	</div>
+</body>
+<script>
+	var app = angular.module("GuardWFMG", []);
+</script>
+<script>
+	app.controller("GuardMenuController", function($sce, $scope, $http) {
+	
+		$('#Welcome').text("Welcome Guard");
+	});
+</script>
+</html>

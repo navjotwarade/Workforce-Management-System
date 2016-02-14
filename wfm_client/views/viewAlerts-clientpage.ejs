@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html ng-app="AdminWFMG">
+   <meta charset="utf-8" />
+   <head>
+      <title>Admin</title>
+      <link rel='stylesheet' href='/stylesheets/style.css' />
+      <link rel="stylesheet"
+         href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+      <link rel="stylesheet"
+         href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
+      <script data-require="angular.js@1.3.9" data-semver="1.3.9"
+         src="https://code.angularjs.org/1.3.9/angular.js"></script>
+      <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+      <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+      <script
+         src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+      <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
+         
+   </head>
+   <body
+      style="margin-top: -50px; background-position: center; background-image: url('../Images/building.jpg');" ng-controller="AdminMenuController">
+      <%- include CommonHeader.ejs %> <%- include AdminCommonMenu.ejs %>
+      <div id="Body" style="float: left; width: 1200px; height: 600px;">
+      
+      <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-8">
+      <br> <br>
+      <div class="panel panel-info" style="border-color: black">
+         <div class="panel-heading" align="center"
+            style="background-color: #fafafa; border-color: black; color: black">
+            <h4 style="color:red">Search for alerts raised:</h4>
+         </div>
+         <div class="panel-body">
+            <form class="form-horizontal" role="form">
+          
+            <div class="form-group">
+               <label for="inputEmail3" class="col-sm-3 control-label">Building ID</label>
+               <div class="col-sm-9" class="form-control">
+                  <p ng-show="!buildingSelected">There are no buildings in your account</p>
+                  <select   class="form-control"  ng-model="buildingSelected">
+                     <option ng-repeat="building in BuildingList | filter : {client_id : clientSelected}" value="{{building.building_id}}" >{{building.building_id}}</option>
+                  </select>
+                  <p class="help-block">Select a building from the list</p> 
+               </div>
+               <div class="form-group">
+               <label for="inputEmail3" class="col-sm-3 control-label">Severity</label>
+               <div class="col-sm-9" class="form-control">
+                 
+                  <select   class="form-control"  ng-model="severitySelected">
+                     <option  value="Critical" >Critical</option>
+                      <option  value="Medium" >Medium</option>
+                       <option  value="Low" >Low</option>
+                  </select>
+                  <p class="help-block">Select severity of alerts</p>
+               </div>
+                <div class="form-group">
+               <label for="inputEmail3" class="col-sm-3 control-label">Alerts Raised on</label>
+               <div class="col-sm-9" class="form-control">
+               <div style="display:inline-block; min-height:290px;">
+     				 <datepicker ng-model="dt"  show-weeks="false" class="well well-sm" custom-class="getDayClass(date, mode)" ng-click="conv()"></datepicker>
+  			  </div>
+  			  
+               </div>
+             </div>
+             </div>
+        
+             
+                 <div  align="center" > 
+                  <div class="panel panel-danger" align ="center"  ng-repeat="alert in AlertRaisedList  | filter : { Building_ID: buildingSelected, Severity : severitySelected, AlertRaisedDateString : dtString}">
+                   
+                     <div class="panel-heading">
+    		<h3 class="panel-title" align="left">Alert Name : {{alert.AlertName}}</h3>
+ 			 </div>
+                     <div class="panel-body">
+                        {{alert.AlertDescription}} <br>
+                       
+                     </div>
+                     <div class="panel-footer" ><div align="left">Submitted by GuardID:  {{alert.Guard_ID}}</div><div align="right">Submitted on {{( alert.AlertRaiseTime | date:"MMMM dd,yyyy HH:mm" )}}</div></div>
+                  </div>
+                  </div>
+               </div>
+            </div>
+        
+      </div>
+   </body>
+   <script type="text/javascript">
+      var app = angular.module("AdminWFMG", ['ui.bootstrap']).controller("AdminMenuController", 
+      		function($sce, $scope, $http) {
+      	$scope.conv=function(){
+      		$scope.dtString = $scope.dt.toDateString();
+      	}
+      	$('#Welcome').text("Welcome Guard");
+      	$scope.BuildingList = <%- JSON.stringify(BuildingList) %>;
+      	$scope.AlertRaisedList = <%- JSON.stringify(AlertRaisedList) %>;
+      	$scope.dt=new Date();
+      	$scope.dt.setHours(0,0,0,0);
+      	$scope.severitySelected="Critical";
+      	console.log($scope.BuildingList);
+      	console.log($scope.AlertRaisedList);
+      	for(var i=0;i<$scope.AlertRaisedList.length;i++){
+      		$scope.AlertRaisedList[i].AlertRaisedDate=new Date($scope.AlertRaisedList[i].AlertRaiseTime.slice(0,10));
+      		$scope.AlertRaisedList[i].AlertRaisedDateString=$scope.AlertRaisedList[i].AlertRaisedDate.toDateString();
+      		console.log($scope.AlertRaisedList[i].AlertRaisedDateString);
+      	}
+      	for(var i=0;i<$scope.BuildingList.length;i++){
+      		if($scope.BuildingList[i].client_id == $scope.clientSelected){
+      			$scope.buildingSelected=$scope.BuildingList[i].building_id;
+      			return;
+      		}     			
+      	}
+      	 $scope.getDayClass = function(date, mode) {
+      	    if (mode === 'day') {
+      	      var dayToCheck = new Date(date).setHours(0,0,0,0);
+      	     
+      	      for (var i=0;i<$scope.events.length;i++){
+      	        var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
+      	     		// $scope.dtString=currentDay.toDateString();
+      	        if (dayToCheck === currentDay) {
+      	        	
+      	          return $scope.events[i].status;
+      	        }
+      	      }
+      	    }
+			
+      	    return '';
+      	  };
+      	
+      });
+   </script>
+</html>

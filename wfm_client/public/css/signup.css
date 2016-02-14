@@ -1,0 +1,56 @@
+.wrap{
+ background: url('../images/building-free-wallpaper-world_high_quality_free_wallpaper_of_city_night_scenes.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+.radiostyle{
+	color: white;
+	font-size: 20px;
+}
+
+.button_signin
+{
+  margin-left:30px;
+  margin-bottom:190px;
+  width: 400px;
+  height: 50px;
+}
+
+.select_style 
+{
+  background: #FFF;
+  overflow: hidden;
+  display: inline-block;
+  color: #525252;
+  font-weight: 300;
+  -webkit-border-radius: 5px 4px 4px 5px/5px 5px 4px 4px;
+  -moz-border-radius: 5px 4px 4px 5px/5px 5px 4px 4px;
+  border-radius: 5px 4px 4px 5px/5px 5px 4px 4px;
+  -webkit-box-shadow: 0 0 5px rgba(123, 123, 123, 0.2);
+  -moz-box-shadow: 0 0 5px rgba(123,123,123,.2);
+  box-shadow: 0 0 5px rgba(123, 123, 123, 0.2);
+  border: solid 1px #DADADA;
+  font-family: "helvetica neue",arial;
+  position: relative;
+  cursor: pointer;
+  padding-right:20px;
+
+}
+
+.select_style select
+{
+  -webkit-appearance: none;
+  appearance:none;
+  width:430px;
+  height: 40px;
+  background:none;
+  background:transparent;
+  border:none;
+  outline:none;
+  cursor:pointer;
+  padding:7px 10px;
+}
+

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html ng-app="ReportWFMG">
+<meta charset="utf-8" />
+<head>
+<title>Search Reports</title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script data-require="angular.js@1.3.9" data-semver="1.3.9"
+	src="https://code.angularjs.org/1.3.9/angular.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head>
+<body
+	style="margin-top: -50px; background-position: center; background-image: url('../Images/building.jpg');">
+	<%- include CommonHeader.ejs %> <%- include ClientCommonMenu.ejs %>
+	<div id="Body" ng-controller="ReportController"
+		style="float: left; width: 1200px; height: 600px; float: left;">
+		<div id="divSearch" align="center"
+			style="width: 100%; background-color: white; height: 80%; float: left;">
+			<h4 style="width: 50%">Enter the below fields</h4>
+
+			<table style="width: 50%; text-align: center;">
+				<tr>
+					<td style="width: 20%"><h5>Building ID</h5></td>
+					<td><input id="buildinglist" name="building"
+						style="width: 35%" placeholder="Search for Buildings"
+						ng-keyup="BuildingIDSearch()" required /></td>
+				</tr>
+				<tr>
+					<td style="width: 20%"><h5>Guard Name</h5></td>
+					<td><input id="guardlist" name="guard" style="width: 35%"
+						placeholder="Search for Guard" ng-keyup="GuardSearch()" required /></td>
+				</tr>
+				<tr>
+					<td style="width: 20%"><h5>Date Raised</h5></td>
+					<td><input type="text" style="width: 35%"
+						placeholder="Click here to pick date" id="datepicker"></td>
+				</tr>
+				<tr>
+					<td style="width: 20%"><h5>Incident Reports</h5></td>
+					<td><select id="IRdropdwn" style="width: 35%">
+							<option value="yes">Yes</option>
+							<option value="no">No</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td style="width: 20%"><h5>Parking Violations</h5></td>
+					<td><select id="PVdropdwn" style="width: 35%">
+							<option value="yes">Yes</option>
+							<option value="no">No</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td style="width: 20%"><h5>Maintenance Calls</h5></td>
+					<td><select id="MCdropdwn" style="width: 35%">
+							<option value="yes">Yes</option>
+							<option value="no">No</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td style="width: 20%"><h5>Calls for service</h5></td>
+					<td><select id="CSdropdwn" style="width: 35%">
+							<option value="yes">Yes</option>
+							<option value="no">No</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td colspan="2"><button ng-click="searchReport()">Search</button></td>
+				</tr>
+
+			</table>
+			<span id="buildingmandatory" style="color: red; display: none;">BuildingID
+				is Required</span>
+		</div>
+	</div>
+</body>
+<script>
+	var app = angular.module("ReportWFMG", []);
+	app.factory('Data', function() {
+
+		var buildingList = [];
+		var guardList = [];
+		var addbuilding = function(newObj) {
+			buildingList.push(newObj);
+		}
+
+		var getbuildings = function() {
+			return buildingList;
+		}
+		var addguard = function(newObj) {
+			guardList.push(newObj);
+		}
+
+		var getguard = function() {
+			return guardList;
+		}
+
+		return {
+			addbuilding : addbuilding,
+			getbuildings : getbuildings,
+			addguard : addguard,
+			getguard : getguard
+		};
+
+	});
+</script>
+<script>
+	app.controller("ClientMenuController", function($sce, $scope, $http, Data) {
+		$('#Welcome').text("Welcome Client");
+		$("#datepicker").datepicker();
+		$http({
+			method : 'POST',
+			url : '/populateSearchReportlist',
+			cache : false
+
+		}).success(function(response) {
+			debugger
+			if (response.data[2][0].TotalBuilding >= 1) {
+				for (i = 0; i < response.data[2][0].TotalBuilding; i++) {
+					Data.addbuilding(response.data[3][i].BuildingName);
+				}
+
+			}
+			if (response.data[4][0].TotalGuard >= 1) {
+				for (i = 0; i < response.data[4][0].TotalGuard; i++) {
+					Data.addguard(response.data[5][i].FirstName);
+				}
+			}
+
+		}).error(function(error) {
+			alert("error")
+		});
+
+	});
+	app.controller("ReportController", function($sce, $scope, $http, Data) {
+		$scope.BuildingIDSearch = function() {
+			$("#buildinglist").autocomplete({
+				source : Data.getbuildings()
+			})
+		}
+		$scope.GuardSearch = function() {
+			$("#guardlist").autocomplete({
+				source : Data.getguard()
+			})
+		}
+		$scope.searchReport = function() {
+			if ($("#buildinglist").val() != "") {
+				var buildingidtxt = $("#buildinglist").val();
+				var buildingid = buildingidtxt.substr(buildingidtxt
+						.indexOf(":") + 1);
+				var guardname;
+				var reportdate;
+				var IRdropdown;
+				var PVdropdown;
+				var MCdropdown;
+				var CSdropdown;
+				if ($("#guardlist").val() != "") {
+					guardname = $("#guardlist").val();
+				} else {
+					guardname = 'np';
+				}
+				if ($("#datepicker").val() != "") {
+					reportdate = $("#datepicker").val();
+				} else {
+					reportdate = '01/01/1900';
+				}
+				if ($("#IRdropdwn :selected").text() == "Yes") {
+					IRdropdown = 1;
+				} else {
+					IRdropdown = 0;
+				}
+				if ($("#PVdropdwn :selected").text() == "Yes") {
+					PVdropdown = 'P';
+				} else {
+					PVdropdown = 'S';
+				}
+				if ($("#MCdropdwn :selected").text() == "Yes") {
+					MCdropdown = 'M';
+				} else {
+					MCdropdown = 'S';
+				}
+				if ($("#CSdropdwn :selected").text() == "Yes") {
+					CSdropdown = 'C';
+				} else {
+					CSdropdown = 'S';
+				}
+				debugger
+				window.location = '/SearchReportResult/' + buildingid + '/'
+						+ guardname + '/' + reportdate + '/' + IRdropdown + '/'
+						+ PVdropdown + '/' + MCdropdown + '/' + CSdropdown;
+
+			} else {
+				$("#buildingmandatory").show();
+			}
+		}
+
+	});
+</script>
+</html>

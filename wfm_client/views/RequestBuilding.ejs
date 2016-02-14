@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html ng-app="AdminWFMG">
+<meta charset="utf-8" />
+<head>
+<title>Admin</title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script data-require="angular.js@1.3.9" data-semver="1.3.9"
+	src="https://code.angularjs.org/1.3.9/angular.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head>
+<body
+	style="margin-top: -50px; background-position: center; background-image: url('../Images/building.jpg');">
+	<%- include CommonHeader.ejs %> <%- include ClientCommonMenu.ejs %>
+
+		<div class="second-column1">
+		
+		<br>
+		
+		
+		<div ng-controller="buildingrequest" >
+		<div class="col-sm-9">
+		<form class="form-inline">
+		
+		<strong style="color: white">Building Name</strong>
+		<input type="text" class="form-control" ng-model="buildingname" placeholder="Building Name" required ><br><br>
+			
+		</form>
+	
+	   <form class="form-inline">
+		<strong style="color: white">Point_1-X</strong>
+		&nbsp
+		<input type="text"  class="form-control" ng-model="coordinates11" placeholder="Point 1-X" required>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		<strong style="color: white">Point_1-Y</strong>
+		&nbsp
+		<input type="text" white" class="form-control" ng-model="coordinates12" placeholder="Point 1-Y" required>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		</form>
+		
+		 <form class="form-inline">
+		<strong style="color: white">Point_2-X</strong>
+		&nbsp
+		<input type="text"  class="form-control" ng-model="coordinates21" placeholder="Point 2-X" required>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		<strong style="color: white" >Point_2-Y</strong>
+		&nbsp
+		<input type="text" class="form-control" ng-model="coordinates22" placeholder="Point 2-Y" required>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		</form>
+		 <form class="form-inline">
+		<strong style="color: white">Point_3-X</strong>
+		&nbsp
+		<input type="text" class="form-control" ng-model="coordinates31" placeholder="Point 3-X" required>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		<strong style="color: white">Point_3-Y</strong>
+		&nbsp
+		<input type="text" class="form-control" ng-model="coordinates32" placeholder="Point 3-Y" required>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		</form>
+		 <form class="form-inline">
+		<strong style="color: white">Point_4-X</strong>
+		&nbsp
+		<input type="text" class="form-control" ng-model="coordinates41" placeholder="Point 4-X" required>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		<strong style="color: white">Point_4-Y</strong>
+		&nbsp
+		<input type="text" class="form-control" ng-model="coordinates42" placeholder="Point 4-Y" required>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		</form>
+		
+			<strong style="color: white">Additional Description, if any</strong>
+		<input type="text" class="form-control" ng-model="description"><br>
+		
+			<input type="submit" class="btn btn-primary" value="submit"   ng-click="submit()">
+			</div>
+		
+		</div>
+		</div>
+		</form>
+		</body>
+		
+<script>
+var app = angular.module('AdminWFMG', []);
+app.controller('ClientMenuController', function($scope,$http,$window) { 
+$('#Welcome').text("Welcome Client");
+});
+app.controller('buildingrequest', function($scope,$http,$window) { 
+
+function validatepoint(point) {
+
+var pat=/^[+-]?\d+(\.\d+)?$/;
+
+
+if(pat.test(point)) {
+return true;
+}
+else
+{
+return false;
+}
+
+} 
+
+
+$scope.submit=function()
+{
+if( $scope.buildingname==null || $scope.coordinates11==null || $scope.coordinates12==null|| $scope.coordinates21==null|| $scope.coordinates22==null || $scope.coordinates31==null|| $scope.coordinates32==null|| $scope.coordinates41==null|| $scope.coordinates42==null)
+alert("Please enter building name and the coordinates of the building");
+else
+{
+
+if(!validatepoint($scope.coordinates11) || !validatepoint($scope.coordinates12) || !validatepoint($scope.coordinates21) || !validatepoint($scope.coordinates22) || !validatepoint($scope.coordinates31) || !validatepoint($scope.coordinates32) || !validatepoint($scope.coordinates41) || !validatepoint($scope.coordinates42) )
+{
+alert("please enter valid coordinates");
+}
+else
+{
+
+var bname=$scope.buildingname;
+var coordinates11=$scope.coordinates11;
+var coordinates12=$scope.coordinates12;
+var coordinates21=$scope.coordinates21;
+var coordinates22=$scope.coordinates22;
+var coordinates31=$scope.coordinates31;
+var coordinates32=$scope.coordinates32;
+var coordinates41=$scope.coordinates41;
+var coordinates42=$scope.coordinates42;
+var description=$scope.description;
+
+ $http({
+  method:'POST',
+  url: '/requestbuildingform',
+  data: { "bname" : [bname], "coordinates11" : [coordinates11], "coordinates12" : [coordinates12], "coordinates21" : [coordinates21], "coordinates22" : [coordinates22], "coordinates31" : [coordinates31],"coordinates32" : [coordinates32],"coordinates41" : [coordinates41],"coordinates42" : [coordinates42], "description" : [description]}
+
+    }).success(function(response)
+    {
+      alert("successfully submitted");
+    })
+    
+}
+}
+}
+});
+		
+		</script>
+</html>

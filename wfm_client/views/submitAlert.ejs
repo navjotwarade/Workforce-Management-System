@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html ng-app="GuardWFMG">
+<meta charset="utf-8" />
+<head>
+<title>Guard</title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script data-require="angular.js@1.3.9" data-semver="1.3.9"
+	src="https://code.angularjs.org/1.3.9/angular.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script
+	src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
+<style>
+#guardTab li a {
+	border-color: purple;
+	background-color: purple;
+	color: white
+}
+
+#guardTab li a:hover {
+	border-color: purple;
+	background-color: white;
+	color: blue
+}
+
+#guardTab li.active a {
+	border-color: purple;
+	background-color: white;
+	color: purple
+}
+
+
+</style>
+</head>
+<body
+	style="margin-top: -50px; background-position: center; background-image: url('../Images/building.jpg');" ng-controller="GuardMenuController">
+	<%- include CommonHeader.ejs %> <%- include GuardCommonMenu.ejs %>
+	<div id="Body" style="float: left; width: 1200px; height: 600px;">
+		
+			<br>
+
+
+			<div class="container">
+				<div class="row">
+				<div class="col-md-2">
+				</div>
+					<div class="col-md-8">
+						<br> <br>
+						<ul class="nav nav-tabs" id="guardTab">
+							<li class="active"><a href="#alert" data-toggle="tab">Alert</a></li>
+							<li><a href="#pv" data-toggle="tab">Parking violation</a></li>
+							<li><a href="#mc" data-toggle="tab">Maintenance Call</a></li>
+							<li><a href="#cs" data-toggle="tab">Call for Service</a></li>
+						</ul>
+						<div class="tab-content guard-tab">
+							<div class="tab-pane active" id="alert">
+								<div class="row">
+									<div class="col-md-12">
+										<br> <br>
+										<div class="panel panel-info" style="border-color: black">
+											<div class="panel-heading" align="center"
+												style="background-color: #fafafa; border-color: black; color: black">
+												<h4 style="color:red">** Raise an Alert **</h4>
+											</div>
+											<div class="panel-body">
+											<p ng-show="alertMessage" style="color:green">{{alertMessage}}</p>
+												<form class="form-horizontal" role="form">
+													<div class="form-group">
+														<label for="inputEmail3" class="col-sm-3 control-label">Alert
+															Type</label>
+														<div class="col-sm-9" class="form-control">
+															<select   class="form-control"  ng-model="alertSelected">
+																
+																<option ng-repeat="alert in AlertList" value="{{alert.alerts_id}}" ng-init="AlertName=alert.alertname">{{alert.alertname}}</option>
+															</select>
+													
+															<p class="help-block">Select an alert from the list</p>
+														</div>
+													</div>
+
+												
+
+													<div class="form-group">
+														<label for="exampleInputFile"
+															class="col-sm-3 control-label">Description</label>
+														<div class="col-sm-9">
+															<textarea class="form-control" rows="4" ng-model="alertDesc"></textarea>
+															<p class="help-block">Enter comments...</p>
+														</div>
+													</div>
+													<div align="center">
+														<button type="submit" class="btn btn-danger" ng-click="raiseAlert()">Submit
+															Alert</button>
+														&nbsp;
+														<button type="clear" class="btn btn-default" ng-click="cancelAlert()">Cancel</button>
+													</div>
+
+												</form>
+
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane active" id="pv">
+								<div class="row">
+									<div class="col-md-12">
+										<br> <br>
+										<div class="panel panel-info" style="border-color: black">
+											<div class="panel-heading" align="center"
+												style="background-color: #fafafa; border-color: black; color: black">
+												<h4 style="color:red">** Notify a parking violation **</h4>
+											</div>
+											<div class="panel-body">
+											<p ng-show="parkingMessage" style="color:green">{{parkingMessage}}</p>
+											
+												<form class="form-horizontal" role="form">
+													
+													<div class="form-group">
+														<label for="exampleInputFile"
+															class="col-sm-3 control-label">Severity</label>
+														<div class="col-sm-9">
+															<select class="form-control"  ng-model="parkingSeverity">
+															<option value="Critical"> Critical </option>
+															<option value="Medium"> Medium </option>
+															<option value="Low"> Low </option>
+															</select>
+															<p class="help-block">Prioritize the incident</p>
+														</div>
+													</div>
+												
+
+													<div class="form-group">
+														<label for="exampleInputFile"
+															class="col-sm-3 control-label">Description *</label>
+														<div class="col-sm-9">
+														<p ng-show="parkingErrorMessage" style="color:red">{{parkingErrorMessage}}</p>
+															<textarea class="form-control" rows="4" ng-model="parkingDesc"></textarea>
+															<p class="help-block">Enter comments...</p>
+														</div>
+													</div>
+													
+													
+													<div align="center">
+														<button type="submit" class="btn btn-danger" ng-click="submitParkingViolation()">Notify</button>
+														&nbsp;
+														<button type="clear" class="btn btn-default" ng-click="cancelParkingViolation()">Cancel</button>
+													</div>
+
+												</form>
+
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						<div class="tab-pane active" id="mc">
+								<div class="row">
+									<div class="col-md-12">
+										<br> <br>
+										<div class="panel panel-info" style="border-color: black">
+											<div class="panel-heading" align="center"
+												style="background-color: #fafafa; border-color: black; color: black">
+												<h4 style="color:red">** Call for Maintenance **</h4>
+											</div>
+											<div class="panel-body">
+											<p ng-show="mcMessage" style="color:green">{{mcMessage}}</p>
+											
+												<form class="form-horizontal" role="form">
+													
+													<div class="form-group">
+														<label for="exampleInputFile"
+															class="col-sm-3 control-label">Severity</label>
+														<div class="col-sm-9">
+															<select class="form-control"  ng-model="mcSeverity">
+															<option value="Critical"> Critical </option>
+															<option value="Medium"> Medium </option>
+															<option value="Low"> Low </option>
+															</select>
+															<p class="help-block">Prioritize the request</p>
+														</div>
+													</div>
+												
+
+													<div class="form-group">
+														<label for="exampleInputFile"
+															class="col-sm-3 control-label">Description *</label>
+														<div class="col-sm-9">
+														<p ng-show="mcErrorMessage" style="color:red">{{mcErrorMessage}}</p>
+															<textarea class="form-control" rows="4" ng-model="mcDesc"></textarea>
+															<p class="help-block">Enter comments...</p>
+														</div>
+													</div>
+													
+													
+													<div align="center">
+														<button type="submit" class="btn btn-danger" ng-click="submitMaintenanceCall()">Submit</button>
+														&nbsp;
+														<button type="clear" class="btn btn-default" ng-click="cancelMaintenanceCall()">Cancel</button>
+													</div>
+
+												</form>
+
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane active" id="cs">
+								<div class="row">
+									<div class="col-md-12">
+										<br> <br>
+										<div class="panel panel-info" style="border-color: black">
+											<div class="panel-heading" align="center"
+												style="background-color: #fafafa; border-color: black; color: black">
+												<h4 style="color:red">** Request for a Service **</h4>
+											</div>
+											<div class="panel-body">
+											<p ng-show="csMessage" style="color:green">{{csMessage}}</p>
+											
+												<form class="form-horizontal" role="form">
+													
+													<div class="form-group">
+														<label for="exampleInputFile"
+															class="col-sm-3 control-label">Severity</label>
+														<div class="col-sm-9">
+															<select class="form-control"  ng-model="csSeverity">
+															<option value="Critical"> Critical </option>
+															<option value="Medium"> Medium </option>
+															<option value="Low"> Low </option>
+															</select>
+															<p class="help-block">Prioritize the request</p>
+														</div>
+													</div>
+												
+
+													<div class="form-group">
+														<label for="exampleInputFile"
+															class="col-sm-3 control-label">Description *</label>
+														<div class="col-sm-9">
+														<p ng-show="csErrorMessage" style="color:red">{{csErrorMessage}}</p>
+															<textarea class="form-control" rows="4" ng-model="csDesc"></textarea>
+															<p class="help-block">Enter comments...</p>
+														</div>
+													</div>
+													
+													
+													<div align="center">
+														<button type="submit" class="btn btn-danger" ng-click="submitServiceRequest()">Notify</button>
+														&nbsp;
+														<button type="clear" class="btn btn-default" ng-click="cancelServiceRequest()">Cancel</button>
+													</div>
+
+												</form>
+
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+</body>
+
+<script type="text/javascript">
+	var app = angular.module("GuardWFMG", []).controller("GuardMenuController",
+			function($sce, $scope, $http) {
+
+
+				$scope.GuardID = '123456789';
+				$scope.AlertList = <%- JSON.stringify(AlertList) %>;
+				$scope.alertSelected=$scope.AlertList[0].alerts_id;
+				$scope.parkingSeverity="Critical";
+				$scope.mcSeverity="Critical";
+				$scope.csSeverity="Critical";
+
+				$('#Welcome').text("Welcome Guard");
+				
+				// Alert submission
+				$scope.cancelAlert=function(){
+					$scope.alertSelected=$scope.AlertList[0].alerts_id;
+				
+					$scope.alertDesc="";
+					$scope.alertMessage="";
+				}
+				
+			
+				$scope.raiseAlert=function(){
+					
+					$scope.requestData={GuardID: $scope.GuardID, AlertID:$scope.alertSelected,AlertDesc: $scope.alertDesc};
+				    $http({
+	                     method: 'POST',
+	                     url: '/raiseAlert',
+	                     data: $scope.requestData,
+	                     headers: {
+	                         'Content-Type': 'application/json'
+	                     }
+	                 }).success(function(data, status) {
+	                	 $scope.cancelAlert();
+	                    $scope.alertMessage="Alert raised successfully! Immediate action will be taken";
+	                                 
+	                 }).
+	                 error(function(data, status) {
+	                	 alert("Alert could not be raised! Please try again...");
+	      
+	                 });
+				}
+				
+				
+				//Parking Violations
+				$scope.submitParkingViolation=function(){
+					if(! $scope.parkingDesc)
+						{
+						$scope.parkingErrorMessage="Description can not be empty";
+						return;
+						}
+					$scope.requestData={GuardID: $scope.GuardID,EventDesc:$scope.parkingDesc, Severity: $scope.parkingSeverity,EventType: 'P'};
+				    $http({
+	                     method: 'POST',
+	                     url: '/submitIncident',
+	                     data: $scope.requestData,
+	                     headers: {
+	                         'Content-Type': 'application/json'
+	                     }
+	                 }).success(function(data, status) {
+	                	 if(data == "Success"){
+	                	 $scope.cancelParkingViolation();
+	                    $scope.parkingMessage="Owner notified successfully! Immidiate action will be taken";
+	                	 }else
+	                		 alert("Notify failed! Please try again..."); 
+	                 }).
+	                 error(function(data, status) {
+	                	 alert("Notify failed! Please try again...");
+	      
+	                 });
+				}
+				
+				$scope.cancelParkingViolation=function(){
+					$scope.parkingMessage="";
+					$scope.parkingDesc="";
+					$scope.parkingSeverity="Critical";
+					$scope.parkingErrorMessage="";
+				}
+				
+				
+				//Submit maintenance calls
+				$scope.submitMaintenanceCall=function(){
+					if(! $scope.mcDesc)
+						{
+						$scope.mcErrorMessage="Description can not be empty";
+						return;
+						}
+					$scope.requestData={GuardID: $scope.GuardID,EventDesc:$scope.mcDesc, Severity: $scope.mcSeverity,EventType: 'M'};
+				    $http({
+	                     method: 'POST',
+	                     url: '/submitIncident',
+	                     data: $scope.requestData,
+	                     headers: {
+	                         'Content-Type': 'application/json'
+	                     }
+	                 }).success(function(data, status) {
+	                	 if(data == "Success"){
+	                	 $scope.cancelMaintenanceCall();
+	                    $scope.mcMessage="Owner notified successfully! Immidiate action will be taken";
+	                	 }else
+	                		 alert("Notify failed! Please try again..."); 
+	                 }).
+	                 error(function(data, status) {
+	                	 alert("Notify failed! Please try again...");
+	      
+	                 });
+				}
+				
+				$scope.cancelMaintenanceCall=function(){
+					$scope.mcMessage="";
+					$scope.mcDesc="";
+					$scope.mcSeverity="Critical";
+					$scope.mcErrorMessage="";
+				}
+				
+				
+				//Submit service calls
+				$scope.submitServiceRequest=function(){
+					if(! $scope.csDesc)
+						{
+						$scope.csErrorMessage="Description can not be empty";
+						return;
+						}
+					$scope.requestData={GuardID: $scope.GuardID,EventDesc:$scope.csDesc, Severity: $scope.csSeverity,EventType: 'C'};
+				    $http({
+	                     method: 'POST',
+	                     url: '/submitIncident',
+	                     data: $scope.requestData,
+	                     headers: {
+	                         'Content-Type': 'application/json'
+	                     }
+	                 }).success(function(data, status) {
+	                	 if(data == "Success"){
+	                	 $scope.cancelServiceRequest();
+	                    $scope.csMessage="Owner notified successfully! Immidiate action will be taken";
+	                	 }else
+	                		 alert("Notify failed! Please try again..."); 
+	                 }).
+	                 error(function(data, status) {
+	                	 alert("Notify failed! Please try again...");
+	      
+	                 });
+				}
+				
+				$scope.cancelServiceRequest=function(){
+					$scope.csMessage="";
+					$scope.csDesc="";
+					$scope.csSeverity="Critical";
+					$scope.csErrorMessage="";
+				}
+				
+			});
+</script>
+</html>
